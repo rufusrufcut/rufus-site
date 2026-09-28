@@ -1,0 +1,8 @@
+// Cloudflare config: serve the built site in dist/ as static files.
+{
+  "name": "rufus-site",
+  "compatibility_date": "2026-09-26",
+  "assets": {
+    "directory": "./dist"
+  }
+}
