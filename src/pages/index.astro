@@ -2,6 +2,7 @@
 // Home page: a typographic holding card (name, role, the year I started).
 // Swiss grid (Müller-Brockmann), big tight type (Crouwel), one red
 // constructivist bar that overprints the name (Martens). No web fonts, no JS.
+import '../styles/base.css'; // shared tokens and reset
 const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the grid guides
 ---
 <html lang="en-GB">
@@ -20,7 +21,7 @@ const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the 
       </div>
       <div class="bar" aria-hidden="true"></div>
 
-      <p class="role">UX Designer<br />and Researcher</p>
+      <p class="role">UX Designer<br />and Researcher<br /><a class="cv-link" href="/cv/">Read my CV</a></p>
       <p class="since">Since <span class="since-year">1998</span></p>
       <h1 class="name"><span>Rufus</span> <span>Spiller</span></h1>
     </main>
@@ -28,24 +29,8 @@ const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the 
 </html>
 
 <style is:global>
-  /* Design tokens: named values used below. These move to tokens.json in Phase 1. */
-  :root {
-    --paper: #f2efe8;   /* off-white background */
-    --ink: #111111;     /* near-black text, 16.4:1 contrast on paper */
-    --signal: #c8201a;  /* constructivist red, 5:1 on paper (passes WCAG AA for all text) */
-    --margin: clamp(16px, 4vw, 48px);
-    --gutter: clamp(8px, 1.5vw, 24px);
-    /* Name size: 26% of screen width, but never taller than a third of the screen height */
-    --name-size: clamp(4rem, min(26vw, 34svh), 24rem);
-  }
-
-  * { box-sizing: border-box; margin: 0; }
-
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
+  /* Home-only token: name size is 26% of screen width, never taller than a third of the screen */
+  :root { --name-size: clamp(4rem, min(26vw, 34svh), 24rem); }
 
   /* The page is one 12-column grid with two rows: a small top row, then all remaining space. */
   .page {
@@ -75,6 +60,8 @@ const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the 
     font-weight: 500;
     line-height: 1.2;
   }
+
+  .cv-link { display: inline-block; margin-top: 0.5em; font-weight: 700; }
 
   .since {
     grid-column: 8 / -1;

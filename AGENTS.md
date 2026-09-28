@@ -19,6 +19,7 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 
 ## Status
 - Phase 0 done (28 Sep 2026): holding page live. CV removed for now (the old PDF remains in Git history at commit 2361fd6).
+- CV page live at /cv/ (28 Sep 2026), built from the KB Career Record, contact details omitted. Linked from home.
 - Next: Phase 1, first task. Shortlist 3 to 5 case studies from the KB (70.3 Career Record, Reason Digital project register) with reasons, before building anything. Phase 1 target: live by end of November 2026.
 
 ## Session close

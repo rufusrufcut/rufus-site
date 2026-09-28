@@ -1,0 +1,261 @@
+---
+// CV page (/cv/). The CV is stored as data below, then laid out on a
+// 12-column grid: dates and places on the left, roles and detail on the right.
+// Contact details (phone, email, address) are deliberately left out for now.
+// Source of truth for titles and dates: Fabric KB, 70.3 Career Record (checked 28 Sep 2026).
+import '../../styles/base.css';
+
+const headline = 'UX/UI Design Specialist, Creative Team Manager, Accessibility Standards (WCAG), Design Systems, Digital Product Design';
+
+const summary = `Experienced UX/UI Designer with a strong background of delivery of complex digital experiences across a wide variety of digital clients. Skilled in interaction design, visual design, and user-centred design, I excel at translating user needs and business requirements into intuitive and scalable design solutions. Collaborative by nature, I work closely with brand and development teams to align digital experiences with brand standards while fostering a culture of evidence-based design. I have also spent several years managing creative teams and working at board level to convert creative vision into bottom line outcomes.`;
+
+// One object per role. Add a role by adding an object; the layout updates itself.
+const roles = [
+  {
+    title: 'Senior UX Designer', org: 'Reason Digital', dates: 'Mar 2021 to present', place: 'Glasgow, remote',
+    points: [
+      'Human-centred UX and research for third sector organisations; accessibility and service design.',
+      'Lead end-to-end discovery, prototype and delivery, turning complex policy and charity needs into clear deliverables (user journeys, IA and design systems).',
+      'Plan and run inclusive, trauma-informed research (surveys, interviews, moderated testing) with vulnerable users; translate insights into actionable backlogs.',
+      'Champion WCAG-aligned patterns; partner with developers to ship accessible, performant UIs and measurable UX improvements.',
+      'Facilitate workshops with stakeholders to align on problem statements, success metrics and service blueprints.',
+      'Mentor designers; improve team rituals (crits, design ops, reusable components) to increase quality and velocity.',
+    ],
+  },
+  {
+    title: 'Creative Director (self-employed)', org: 'Jacob&Rufus', dates: 'Jun 2015 to Mar 2021', place: 'Hunedoara, Romania, remote',
+    points: [
+      'Independent design practice delivering UX, brand and packaging design, often in collaboration with agencies.',
+      'Partnered with agencies to provide design expertise for integrated campaigns and marketing activations.',
+      'Built strong repeat relationships through reliable delivery and a collaborative working style.',
+    ],
+  },
+  {
+    title: 'Creative Director (Asia Pacific Board)', org: 'Precedent', dates: 'Dec 2012 to Apr 2015', place: 'Melbourne, Australia',
+    points: [
+      'Led the Melbourne studio, set up by the London agency to win and deliver Monash University.',
+      'Hired and managed two designers and led the agency’s creative output in Australia.',
+      'Shipped UX and brand-led platforms for RSPCA, Australian Red Cross Blood Service, Monash and Curtin University, AICD, Water Corporation and Perth Arena.',
+      'Partnered with account and tech leads to land and deliver seven-figure multi-site programmes.',
+    ],
+  },
+  {
+    title: 'Creative Director, Board Member and Shareholder', org: 'Line Digital', dates: 'Oct 2008 to Nov 2012', place: 'Edinburgh, Scotland',
+    points: [
+      'Creative strategy for IKEA, Tesco Bank, Standard Life, Scottish Friendly and Edinburgh Festivals, across 10+ properties.',
+      'Board responsibilities: pipeline, hiring and studio growth.',
+    ],
+  },
+  {
+    title: 'Head of Digital', org: 'Good Creative', dates: 'Jan 2005 to Oct 2008', place: 'Glasgow, Scotland',
+    points: ['Brought digital expertise into a brand and packaging agency, extending its offer into online channels.'],
+  },
+  {
+    title: 'Digital Designer', org: 'The Hub Agency', dates: 'Aug 2004 to Dec 2004', place: 'Glasgow, Scotland',
+    points: ['Brought digital capability into an offline agency; delivered early responsive and interactive work.'],
+  },
+  {
+    title: 'Creative', org: 'It’s Not Rocket Science (acquired by Wheel/LBi)', dates: 'Jul 2001 to Jul 2004', place: 'Glasgow, Scotland',
+    points: ['Concept to delivery for the Home Office, Brylcreem and Scottish Power; secondment after the acquisition.'],
+  },
+  {
+    title: 'Flash Developer', org: 'Black ID', dates: 'Jul 2000 to Jun 2001', place: 'Glasgow, Scotland',
+    points: ['Led 4 developers; shipped rich media for MTV, Channel 4, Burger King, BT Cellnet and SQA.'],
+  },
+  {
+    title: 'Junior Designer', org: 'Imajica', dates: 'Jun 1998 to Jun 2000', place: 'Aberdeen, Scotland',
+    points: ['Studio all-rounder across design and early web for BP, Shell and Highland Distillers.'],
+  },
+];
+
+const projects = [
+  {
+    title: 'Long Lunch', role: 'Founder and Director (pro bono), 2003 to 2012',
+    points: [
+      'Not-for-profit lecture series connecting students and industry.',
+      'Co-founded and curated talks; built a community spanning students, designers and creative leaders.',
+      'Mentored with Edinburgh College of Art and Telford College.',
+    ],
+  },
+];
+
+const education = [
+  { title: 'HND, Computer Graphic Design and Production (Class Representative)', org: 'North East Scotland College, Aberdeen', dates: 'Jun 1996 to Jun 1998' },
+];
+const certificates = [{ title: 'Leadership Training for Managers', org: 'Dale Carnegie Training' }];
+const achievements = [
+  { title: 'DADI Award Winner, use of visual design', dates: 'Nov 2010' },
+  { title: 'BMIA Award Winner, use of visual design', dates: 'Jan 2010' },
+];
+const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibility', 'Collaboration', 'Analytical thinking', 'Design system development', 'Communication', 'Team mentoring and coaching', 'User flows', 'Wireframing'];
+---
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CV, Rufus Spiller</title>
+    <meta name="description" content="CV of Rufus Spiller, UX designer and researcher based in Glasgow. Designing since 1998." />
+    <meta name="theme-color" content="#f2efe8" />
+  </head>
+  <body>
+    <header class="cv-header grid">
+      <a class="home" href="/">Rufus Spiller</a>
+      <h1 class="cv-title">Curriculum<br />vitae</h1>
+      <p class="headline">{headline}</p>
+      <p class="links">Glasgow, Scotland<br /><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
+    </header>
+
+    <main>
+      <section class="block grid" aria-labelledby="summary">
+        <h2 id="summary" class="label">Summary</h2>
+        <p class="content lead">{summary}</p>
+      </section>
+
+      <section class="block grid" aria-labelledby="experience">
+        <h2 id="experience" class="label">Experience</h2>
+        <ol class="content entries">
+          {roles.map((role) => (
+            <li class="entry">
+              <p class="meta">{role.dates}{role.place && <><br />{role.place}</>}</p>
+              <div class="detail">
+                <h3>{role.title}</h3>
+                <p class="org">{role.org}</p>
+                <ul>{role.points.map((point) => <li>{point}</li>)}</ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="block grid" aria-labelledby="projects">
+        <h2 id="projects" class="label">Projects</h2>
+        <div class="content entries">
+          {projects.map((p) => (
+            <div class="entry">
+              <p class="meta">{p.role}</p>
+              <div class="detail">
+                <h3>{p.title}</h3>
+                <ul>{p.points.map((point) => <li>{point}</li>)}</ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="block grid" aria-labelledby="education">
+        <h2 id="education" class="label">Education</h2>
+        <div class="content entries">
+          {education.map((e) => (
+            <div class="entry">
+              <p class="meta">{e.dates}</p>
+              <div class="detail"><h3>{e.title}</h3><p class="org">{e.org}</p></div>
+            </div>
+          ))}
+          {certificates.map((c) => (
+            <div class="entry">
+              <p class="meta">Certificate</p>
+              <div class="detail"><h3>{c.title}</h3><p class="org">{c.org}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="block grid" aria-labelledby="achievements">
+        <h2 id="achievements" class="label">Achievements</h2>
+        <div class="content entries">
+          {achievements.map((a) => (
+            <div class="entry">
+              <p class="meta">{a.dates}</p>
+              <div class="detail"><h3>{a.title}</h3></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="block grid" aria-labelledby="skills">
+        <h2 id="skills" class="label">Skills</h2>
+        <ul class="content skills">{skills.map((s) => <li>{s}</li>)}</ul>
+      </section>
+    </main>
+
+    <footer class="cv-footer grid">
+      <a class="home" href="/">Back to home</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* Every row of the page uses the same 12-column grid. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--gutter);
+    padding-inline: var(--margin);
+  }
+
+  /* Header: name link, big two-line title, headline and location. */
+  .cv-header { padding-block: var(--margin) calc(var(--margin) * 2); row-gap: 1.5rem; }
+  .home { grid-column: 1 / -1; font-weight: 700; }
+  .cv-title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 12vw, 10rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+  .headline { grid-column: 1 / -1; max-width: 40ch; font-size: clamp(1rem, 1.6vw, 1.25rem); font-weight: 500; line-height: 1.3; }
+  .links { grid-column: 1 / -1; color: var(--muted); }
+
+  /* Each section: a red rule on top, label on the left three columns, content on the right. */
+  .block {
+    padding-block: 1.5rem 3rem;
+    border-top: 2px solid var(--ink);
+    margin-inline: var(--margin);
+    padding-inline: 0;
+    row-gap: 1rem;
+  }
+  .label {
+    grid-column: 1 / -1;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--signal);
+    letter-spacing: 0.02em;
+  }
+  .content { grid-column: 1 / -1; list-style: none; }
+  .lead { max-width: 60ch; font-size: clamp(1.125rem, 1.8vw, 1.5rem); line-height: 1.4; }
+
+  /* An entry: dates and place, then title, organisation and bullet points. */
+  .entry {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .entry:first-child { padding-top: 0; }
+  .meta { font-size: 0.875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .detail h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; }
+  .org { font-weight: 500; }
+  .detail ul { margin-top: 0.5rem; padding-left: 1.1em; max-width: 65ch; }
+  .detail li + li { margin-top: 0.25rem; }
+
+  .skills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skills li { border: 1px solid var(--ink); padding: 0.25rem 0.625rem; font-size: 0.875rem; }
+
+  .cv-footer { padding-block: var(--margin); }
+
+  /* From tablet width up: label in columns 1 to 3, content in 4 to 12,
+     and each entry splits into dates (left) and detail (right). */
+  @media (min-width: 48rem) {
+    .label { grid-column: 1 / span 3; }
+    .content { grid-column: 4 / -1; }
+    .headline { grid-column: 4 / -1; }
+    .links { grid-column: 1 / span 3; grid-row: 3; }
+    .entry { grid-template-columns: 1fr 3fr; gap: var(--gutter); }
+  }
+
+  @media print {
+    .home, .cv-footer { display: none; }
+    .cv-title { font-size: 3rem; }
+    .entry { break-inside: avoid; }
+  }
+</style>

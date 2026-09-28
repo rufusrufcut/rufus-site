@@ -1,0 +1,25 @@
+/* Shared foundations for every page: design tokens, reset, body type.
+   Imported at the top of each page. These values move to tokens.json in Phase 1. */
+:root {
+  --paper: #f2efe8;   /* off-white background */
+  --ink: #111111;     /* near-black text, 16.4:1 contrast on paper */
+  --muted: #555555;   /* secondary text, 6.5:1 on paper */
+  --signal: #c8201a;  /* constructivist red, 5:1 on paper (passes WCAG AA for all text) */
+  --rule: rgb(17 17 17 / 0.15);
+  --margin: clamp(16px, 4vw, 48px);
+  --gutter: clamp(8px, 1.5vw, 24px);
+  --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.5;
+}
+
+a { color: inherit; text-underline-offset: 0.2em; }
+a:hover { color: var(--signal); }
+:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
