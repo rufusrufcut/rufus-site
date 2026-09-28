@@ -1,17 +1,119 @@
 ---
-// Home page. For now: a holding page with my name.
+// Home page: a typographic holding card (name, role, the year I started).
+// Swiss grid (Müller-Brockmann), big tight type (Crouwel), one red
+// constructivist bar that overprints the name (Martens). No web fonts, no JS.
+const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the grid guides
 ---
-   <html lang="en-GB">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Rufus Spiller, UX designer and researcher</title>
-	   <meta name="description" content="Rufus Spiller is a UX designer and researcher based in Glasgow." />		
-	</head>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rufus Spiller, UX designer and researcher</title>
+    <meta name="description" content="Rufus Spiller is a UX designer and researcher based in Glasgow. Designing since 1998." />
+    <meta name="theme-color" content="#f2efe8" />
+  </head>
   <body>
-    <main>
-      <h1>Rufus Spiller</h1>
-      <p>UX designer and researcher. New site coming soon.</p>
+    <main class="page">
+      <!-- Faint column lines: the grid made visible. Decorative, so hidden from screen readers. -->
+      <div class="guides" aria-hidden="true">
+        {columns.map(() => <span></span>)}
+      </div>
+      <div class="bar" aria-hidden="true"></div>
+
+      <p class="role">UX Designer<br />and Researcher</p>
+      <p class="since">Since <span class="since-year">1998</span></p>
+      <h1 class="name"><span>Rufus</span> <span>Spiller</span></h1>
     </main>
   </body>
 </html>
+
+<style is:global>
+  /* Design tokens: named values used below. These move to tokens.json in Phase 1. */
+  :root {
+    --paper: #f2efe8;   /* off-white background */
+    --ink: #111111;     /* near-black text, 16.4:1 contrast on paper */
+    --signal: #c8201a;  /* constructivist red, 5:1 on paper (passes WCAG AA for all text) */
+    --margin: clamp(16px, 4vw, 48px);
+    --gutter: clamp(8px, 1.5vw, 24px);
+    /* Name size: 26% of screen width, but never taller than a third of the screen height */
+    --name-size: clamp(4rem, min(26vw, 34svh), 24rem);
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  /* The page is one 12-column grid with two rows: a small top row, then all remaining space. */
+  .page {
+    position: relative;
+    overflow: hidden;
+    min-height: 100svh;
+    padding: var(--margin);
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--gutter);
+  }
+
+  /* The guides reuse the page's columns (subgrid), so the lines always match the real grid. */
+  .guides {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+  .guides span { border-left: 1px solid rgb(17 17 17 / 0.08); }
+
+  .role {
+    grid-column: 1 / span 5;
+    grid-row: 1;
+    font-size: clamp(0.875rem, 1.4vw, 1.25rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .since {
+    grid-column: 8 / -1;
+    grid-row: 1;
+    justify-self: end;
+    text-align: right;
+    font-size: clamp(0.875rem, 1.4vw, 1.25rem);
+    font-weight: 500;
+  }
+  .since-year {
+    display: block;
+    color: var(--signal);
+    font-size: clamp(3rem, 11vw, 10rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+
+  .name {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: end;
+    padding-bottom: 0.12em;        /* room for the descender on the p */
+    font-size: var(--name-size);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    mix-blend-mode: multiply;      /* ink overprints the red bar, like screen printing */
+  }
+  .name span { display: block; }  /* one word per line */
+
+  /* The constructivist accent: a red bar, tilted, sitting just above the name. */
+  .bar {
+    position: absolute;
+    left: 45%;
+    bottom: calc(var(--margin) + var(--name-size) * 1.05);
+    width: 80%;
+    height: clamp(24px, 4vw, 56px);
+    background: var(--signal);
+    transform: rotate(-12deg);
+  }
+</style>
