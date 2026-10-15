@@ -102,7 +102,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
       <a class="home" href="/">Rufus Spiller</a>
       <h1 class="cv-title">Curriculum<br />vitae</h1>
       <p class="headline">{headline}</p>
-      <p class="links">Glasgow, Scotland<br /><a href="https://rufusspiller.com">rufusspiller.com</a><br /><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
+      <p class="links">Glasgow, Scotland<br /><span class="print-only"><a href="https://rufusspiller.com">rufusspiller.com</a><br /></span><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
     </header>
 
     <main>
@@ -244,6 +244,9 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
 
   .cv-footer { padding-block: var(--margin); }
 
+  /* Shown only on the printed CV (e.g. the website address, which is redundant on the site itself). */
+  .print-only { display: none; }
+
   /* From tablet width up: label in columns 1 to 3, content in 4 to 12,
      and each entry splits into dates (left) and detail (right). */
   @media (min-width: 48rem) {
@@ -263,6 +266,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
     :root { --margin: 0; --gutter: 5mm; }
     body { font-size: 8.5pt; line-height: 1.35; background: none; }
     .cv-footer { display: none; }
+    .print-only { display: inline; }
     /* The name link at the top doubles as the printed name: no underline, larger. */
     .cv-header .home { font-size: 14pt; text-decoration: none; }
 
