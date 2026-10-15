@@ -21,8 +21,7 @@ const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the 
       </div>
       <div class="bar" aria-hidden="true"></div>
 
-      <p class="role">UX Designer<br />and Researcher<br /><a class="cv-link" href="/cv/">Read my CV</a></p>
-      <p class="since">Since <span class="since-year">1998</span></p>
+      <p class="role">UX Designer<br />and Researcher<br /><span class="since">Since <span class="since-year">1998</span></span><br /><a class="cv-link" href="/cv/">Read my CV</a></p>
       <h1 class="name"><span>Rufus</span> <span>Spiller</span></h1>
     </main>
   </body>
@@ -63,22 +62,9 @@ const columns = Array.from({ length: 12 }); // 12 empty items, used to draw the 
 
   .cv-link { display: inline-block; margin-top: 0.5em; font-weight: 700; }
 
-  .since {
-    grid-column: 8 / -1;
-    grid-row: 1;
-    justify-self: end;
-    text-align: right;
-    font-size: clamp(0.875rem, 1.4vw, 1.25rem);
-    font-weight: 500;
-  }
-  .since-year {
-    display: block;
-    color: var(--signal);
-    font-size: clamp(3rem, 11vw, 10rem);
-    font-weight: 700;
-    line-height: 0.8;
-    letter-spacing: -0.04em;
-  }
+  /* "Since 1998" sits under the role, same size as it, with the year in red. */
+  .since { display: inline-block; margin-top: 0.5em; }
+  .since-year { color: var(--signal); font-weight: 700; }
 
   .name {
     grid-column: 1 / -1;
