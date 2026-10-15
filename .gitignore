@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# private working data (personal lists, DOB, unpublished rows). Never commit.
+private/
