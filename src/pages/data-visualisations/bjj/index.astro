@@ -13,7 +13,7 @@ const data = JSON.stringify({ months, registry });
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BJJ Data Visualisation, Rufus Spiller</title>
-    <meta name="description" content="Thirteen years of Brazilian jiu-jitsu, one icon per month: where Rufus Spiller lived, his club, his belt and the medals he won." />
+    <meta name="description" content="A monthly visualisation of Brazilian Jiu-Jitsu. Where Rufus Spiller was living, his club, his belt and competition record." />
     <meta name="theme-color" content="#f2efe8" />
   </head>
   <body>
@@ -92,8 +92,8 @@ M.forEach((mo,i)=>{
     <h2 class="month">${label(mo.month)}${mo.comps.length?`<small>${won} won, ${lost} lost · <span class="count">${md} medal${md===1?"":"s"}</span></small>`:""}</h2>
     <dl class="facts"><div><dt>Place</dt><dd>${pl?pl.name:"Unknown"}</dd></div><div><dt>Club</dt><dd>${cl?(CLUB_URL[mo.club]?`<a href="${CLUB_URL[mo.club]}" target="_blank" rel="noopener">${cl.name}<span class="vh"> (opens in a new tab)</span></a>`:cl.name):"Unknown"}</dd></div><div><dt>Belt</dt><dd>${be?be.name:"Unknown"}</dd></div></dl>
     <ul class="comps">${mo.comps.length ? mo.comps.map(c=>`<li><i class="m" style="${c.medal?`background:${MEDAL[c.medal]};border-color:${MEDAL[c.medal]}`:""}"></i>
-      <span>${c.name}<br><span class="meta">${[c.type,c.cat,c.weight].filter(Boolean).join(" · ")}${c.default?" · default medal, not counted":""}</span></span>
-      <span class="rec">${c.w}W ${c.l}L${c.d?" "+c.d+"D":""}${c.place?" · "+["","1st","2nd","3rd","4th"][c.place]:""}</span></li>`).join("") : ""}</ul>
+      <span>${c.name}<br><span class="meta">${[c.type,c.cat,c.weight].filter(Boolean).join(" · ")}</span></span>
+      <span class="rec">${c.w}W ${c.l}L${c.d?" "+c.d+"D":""}${c.place&&!c.default?" · "+["","1st","2nd","3rd","4th"][c.place]:""}</span></li>`).join("") : ""}</ul>
     </article>`;
 });
 band.innerHTML = `<button type="button" class="close" id="close" aria-label="Close month details">×</button>` + panels;
