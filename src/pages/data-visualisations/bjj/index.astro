@@ -132,7 +132,7 @@ document.addEventListener("click", e=>{
   const a = e.target.closest('a[href^="#m-"]'); if(!a) return;
   e.preventDefault();
   const i = a.dataset.i!=null ? +a.dataset.i : idx.get(a.getAttribute("href").slice(3));
-  if(i!=null) select(i, false);
+  if(i!=null && matches(i)) select(i, false);
 });
 /* filter state; previous and next skip to the nearest month that matches it.
    With nothing selected, previous opens the latest match and next the first. */
@@ -156,7 +156,11 @@ window.addEventListener("keydown", e=>{
   if(d==null || e.target.closest("button,select")) return;
   e.preventDefault();
   if(d===-1 || d===1){ const t = d<0 ? prevOf() : nextOf(); if(t>=0) select(t, true); return; }
-  select(focus<0 ? (d<0 ? M.length-1 : 0) : focus+d, true);
+  /* up and down jump about a year, landing on the nearest month that matches the filters */
+  if(focus<0){ const t = d<0 ? prevOf() : nextOf(); if(t>=0) select(t, true); return; }
+  const target = Math.max(0, Math.min(M.length-1, focus+d));
+  const t = matches(target) ? target : step(target, d<0 ? -1 : 1);
+  if(t>=0 && t!==focus) select(t, true);
 });
 const fromHash = idx.get(location.hash.replace(/^#m-/,""));
 if(fromHash!=null) select(fromHash); else controls();
@@ -168,7 +172,11 @@ setTimeout(()=>applyFilters());
 function applyFilters(){
   const on = filt.comp || filt.place || filt.club;
   page.querySelectorAll(".cell").forEach(c=>{
-    c.classList.toggle("dim", on && !matches(+c.dataset.i));
+    const off = on && !matches(+c.dataset.i);
+    c.classList.toggle("dim", off);
+    /* dimmed months can't be chosen: out of the tab order and announced as unavailable */
+    if(off){ c.setAttribute("aria-disabled","true"); c.setAttribute("tabindex","-1"); }
+    else { c.removeAttribute("aria-disabled"); c.removeAttribute("tabindex"); }
   });
   document.getElementById("fComp").setAttribute("aria-checked", String(filt.comp));
   document.getElementById("fClear").hidden = !on;
@@ -240,7 +248,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .switch[aria-checked="true"]:hover .track{background:var(--signal)}
 .filters button:disabled{opacity:.35;cursor:default}
 #fClear{border-color:transparent;text-decoration:underline;text-underline-offset:.2em;padding-inline:0}
-.cell.dim{opacity:.3}
+.cell.dim{opacity:.3;pointer-events:none;cursor:default}
+.cell.dim:hover svg{transform:none}
 /* no focus ring on the filters after a click or tap; keyboard users still get one */
 html:not(.kbd) .filters :focus,html:not(.kbd) .filters :focus-visible{outline:none}
 .cell,.band{scroll-margin-top:124px}
