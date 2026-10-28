@@ -1,0 +1,281 @@
+---
+// BJJ Data Visualisation (/data-visualisations/bjj/): one icon per training month since September 2013.
+// Each icon: place lived (outer shape, 40% tint), club (middle shape, full colour), coloured by belt;
+// the ring shows medals won that month (default medals left out), dashed if he competed without a medal.
+// Data: src/data/bjj-months.json (from the BJJ Stats sheet) and src/data/icon-registry.json (shapes and assignments).
+import '../../../styles/base.css';
+import months from '../../../data/bjj-months.json';
+import registry from '../../../data/icon-registry.json';
+const data = JSON.stringify({ months, registry });
+---
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BJJ Data Visualisation, Rufus Spiller</title>
+    <meta name="description" content="Thirteen years of Brazilian jiu-jitsu, one icon per month: where Rufus Spiller lived, his club, his belt and the medals he won." />
+    <meta name="theme-color" content="#f2efe8" />
+  </head>
+  <body>
+    <main class="page" id="page">
+
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Rufus Spiller</a><span aria-hidden="true">/</span><a href="/data-visualisations/">Data Visualisations</a></nav>
+  <h1 class="title">BJJ Data Visualisation</h1>
+  <div class="bar">
+    <nav class="controls" aria-label="Step through months">
+      <button type="button" id="prev"></button>
+      <button type="button" id="next"></button>
+    </nav>
+    <div class="filters" role="group" aria-label="Filter months">
+      <button type="button" id="fComp" class="switch" role="switch" aria-checked="false"><span class="track" aria-hidden="true"><span class="thumb"></span></span>Show competitions</button>
+      <label for="fPlace">Location <select id="fPlace"><option value="">All</option></select></label>
+      <label for="fClub">Club <select id="fClub"><option value="">All</option></select></label>
+      <button type="button" id="fClear" hidden>Clear filters</button>
+    </div>
+  </div>
+  <noscript><p class="nojs">This visualisation needs JavaScript to draw the months.</p></noscript>
+  <section class="band" id="band" aria-live="polite" aria-label="Selected month" hidden></section>
+    </main>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="defs"></defs></svg>
+    <script type="application/json" id="bjj-data" set:html={data}></script>
+    <script is:inline>
+/* Draws the month grid in the browser from the JSON above, then handles selection, filters and arrow keys. */
+const DATA = JSON.parse(document.getElementById("bjj-data").textContent);
+const R = DATA.registry, M = DATA.months;
+const BELT = Object.fromEntries(R.dimensions.belt.items.map(b=>[b.id,b.colour]));   /* belt colours, tuned for the paper */
+const MEDAL = {gold:"#a37800", silver:"#7b8089", bronze:"#9a5522"};   /* each at least 3:1 on the paper */
+const NOMEDAL = "#6f747c";
+const CLUB_URL = Object.fromEntries(R.dimensions.club.items.map(c=>[c.id,c.url]));
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const item = (dim,id) => (R.dimensions[dim].items.find(x=>x.id===id) || null);
+const label = ym => `${MONTHS[+ym.slice(5)-1]} ${ym.slice(0,4)}`;
+const id = ym => "m-" + ym;
+
+/* each unit shape is defined once as a symbol and reused, which keeps the page small */
+document.getElementById("defs").innerHTML = Object.entries(R.shapes).map(([k,v])=>`<symbol id="s${k}" viewBox="0 0 150 150">${v}</symbol>`).join("");
+
+function iconSvg(mo){
+  const ink = BELT[mo.belt] || "#111111", pl = item("place",mo.place), cl = item("club",mo.club);
+  let s = `<svg viewBox="0 0 150 150" aria-hidden="true" style="isolation:isolate">`;
+  /* overprint: place in a 40% tint of the belt colour, club in full colour printed over it */
+  if(pl) s += `<use href="#s${pl.shape}" fill="${ink}" opacity=".4"/>`;
+  if(cl) s += `<use href="#s${cl.shape}" x="31.5" y="31.5" width="87" height="87" fill="${ink}" style="mix-blend-mode:multiply"/>`;
+  const n = mo.medals.length, r = 70;
+  if(n===1) s += `<circle cx="75" cy="75" r="${r}" fill="none" stroke="${MEDAL[mo.medals[0]]}" stroke-width="10"/>`;
+  else if(n>1){
+    const gap=6, p=a=>[75+r*Math.cos(a*Math.PI/180),75+r*Math.sin(a*Math.PI/180)];
+    mo.medals.forEach((m,i)=>{ const a0=-90+i*360/n+gap/2, a1=-90+(i+1)*360/n-gap/2, [x0,y0]=p(a0), [x1,y1]=p(a1);
+      s += `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${MEDAL[m]}" stroke-width="10"/>`; });
+  } else if(mo.comps.length) s += `<circle cx="75" cy="75" r="72.5" fill="none" stroke="${NOMEDAL}" stroke-width="4" stroke-dasharray="7 7"/>`;
+  else s += `<circle cx="75" cy="75" r="73" fill="none" stroke="${ink}" stroke-width="3"/>`;
+  return s + `</svg>`;
+}
+
+/* build the grid and one detail panel per month */
+const page = document.getElementById("page"), band = document.getElementById("band");
+const idx = new Map(M.map((m,i)=>[m.month,i]));
+const y0 = +M[0].month.slice(0,4), y1 = +M[M.length-1].month.slice(0,4);
+let grid = "", panels = "";
+for(let y=y0;y<=y1;y++){
+  grid += `<h2 class="year">${y}</h2>`;
+  for(let m=1;m<=12;m++){
+    const k=`${y}-${String(m).padStart(2,"0")}`, i=idx.get(k);
+    if(i==null){ grid += `<span class="blank" aria-hidden="true"></span>`; continue; }
+    const mo=M[i], md=mo.medals.length;
+    grid += `<a class="cell" href="#${id(k)}" data-i="${i}" aria-label="${label(k)}${md?`, ${md} medal${md>1?"s":""}`:mo.comps.length?", competed":""}">${iconSvg(mo)}</a>`;
+  }
+}
+M.forEach((mo,i)=>{
+  const pl=item("place",mo.place), cl=item("club",mo.club), be=item("belt",mo.belt), md=mo.medals.length;
+  const won=mo.comps.reduce((a,c)=>a+c.w,0), lost=mo.comps.reduce((a,c)=>a+c.l,0);
+  panels += `<article id="${id(mo.month)}" data-i="${i}">
+    <h2 class="month">${label(mo.month)}${mo.comps.length?`<small>${won} won, ${lost} lost · <span class="count">${md} medal${md===1?"":"s"}</span></small>`:""}</h2>
+    <dl class="facts"><div><dt>Place</dt><dd>${pl?pl.name:"Unknown"}</dd></div><div><dt>Club</dt><dd>${cl?(CLUB_URL[mo.club]?`<a href="${CLUB_URL[mo.club]}" target="_blank" rel="noopener">${cl.name}<span class="vh"> (opens in a new tab)</span></a>`:cl.name):"Unknown"}</dd></div><div><dt>Belt</dt><dd>${be?be.name:"Unknown"}</dd></div></dl>
+    <ul class="comps">${mo.comps.length ? mo.comps.map(c=>`<li><i class="m" style="${c.medal?`background:${MEDAL[c.medal]};border-color:${MEDAL[c.medal]}`:""}"></i>
+      <span>${c.name}<br><span class="meta">${[c.type,c.cat,c.weight].filter(Boolean).join(" · ")}${c.default?" · default medal, not counted":""}</span></span>
+      <span class="rec">${c.w}W ${c.l}L${c.d?" "+c.d+"D":""}${c.place?" · "+["","1st","2nd","3rd","4th"][c.place]:""}</span></li>`).join("") : ""}</ul>
+    </article>`;
+});
+band.innerHTML = `<button type="button" class="close" id="close" aria-label="Close month details">×</button>` + panels;
+page.insertAdjacentHTML("beforeend", grid);
+
+let focus = -1;
+let initial = true;
+function select(i, fromKey){
+  i = Math.max(0, Math.min(M.length-1, i)); if(i===focus) return;
+  band.querySelector("article.is-current")?.classList.remove("is-current");
+  page.querySelector('.cell[aria-current="true"]')?.removeAttribute("aria-current");
+  band.querySelector(`article[data-i="${i}"]`).classList.add("is-current");
+  const cell = page.querySelector(`.cell[data-i="${i}"]`); cell.setAttribute("aria-current","true");
+  /* move the panel to sit right after the chosen month's year row */
+  const nextYear = [...page.querySelectorAll(".year")].find(h=>+h.textContent > +M[i].month.slice(0,4));
+  page.insertBefore(band, nextYear || null);
+  focus = i;
+  band.hidden = false;
+  controls();
+  if(fromKey){ band.scrollIntoView({block:"nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); }
+  if(!initial){ try{ history.replaceState(null, "", "#"+id(M[i].month)); }catch(e){} }
+}
+/* close: back to nothing selected, focus returns to the month's icon */
+function deselect(returnFocus){
+  if(focus<0) return;
+  const cell = page.querySelector(`.cell[data-i="${focus}"]`);
+  band.querySelector("article.is-current")?.classList.remove("is-current");
+  cell?.removeAttribute("aria-current");
+  band.hidden = true; focus = -1; controls();
+  try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+  if(returnFocus!==false) cell?.focus({preventScroll:true});
+}
+document.getElementById("close").onclick = ()=>deselect();
+addEventListener("keydown", e=>{ if(e.key==="Escape") deselect(); });
+document.addEventListener("click", e=>{
+  const a = e.target.closest('a[href^="#m-"]'); if(!a) return;
+  e.preventDefault();
+  const i = a.dataset.i!=null ? +a.dataset.i : idx.get(a.getAttribute("href").slice(3));
+  if(i!=null) select(i, false);
+});
+/* filter state; previous and next skip to the nearest month that matches it.
+   With nothing selected, previous opens the latest match and next the first. */
+const filt = {comp:false, place:"", club:""};
+const fits = (m, f) => (!f.comp || m.comps.length>0) && (!f.place || m.place===f.place) && (!f.club || m.club===f.club);
+const matches = i => fits(M[i], filt);
+/* how many months a filter choice would leave, given the other filters */
+const countWith = change => { const f={...filt, ...change}; return M.filter(m=>fits(m,f)).length; };
+const step = (from, dir) => { for(let i=from+dir; i>=0 && i<M.length; i+=dir) if(matches(i)) return i; return -1; };
+const prevOf = () => step(focus<0 ? M.length : focus, -1), nextOf = () => step(focus<0 ? -1 : focus, 1);
+function controls(){
+  const P=document.getElementById("prev"), N=document.getElementById("next"), pv=M[prevOf()], nx=M[nextOf()];
+  P.textContent = "← " + (pv?label(pv.month):"Previous"); P.disabled = !pv;
+  N.textContent = (nx?label(nx.month):"Next") + " →"; N.disabled = !nx;
+}
+document.getElementById("prev").onclick=()=>{ const t=prevOf(); if(t>=0) select(t,true); };
+document.getElementById("next").onclick=()=>{ const t=nextOf(); if(t>=0) select(t,true); };
+
+window.addEventListener("keydown", e=>{
+  const d = {ArrowLeft:-1, ArrowRight:1, ArrowUp:-12, ArrowDown:12}[e.key];
+  if(d==null || e.target.closest("button,select")) return;
+  e.preventDefault();
+  if(d===-1 || d===1){ const t = d<0 ? prevOf() : nextOf(); if(t>=0) select(t, true); return; }
+  select(focus<0 ? (d<0 ? M.length-1 : 0) : focus+d, true);
+});
+const fromHash = idx.get(location.hash.replace(/^#m-/,""));
+if(fromHash!=null) select(fromHash); else controls();
+
+/* filters: matching months stay at full strength, the rest drop to 30% */
+const fill = (el, dim) => { const used=[...new Set(M.map(m=>m[dim]))]; el.insertAdjacentHTML("beforeend", used.map(v=>`<option value="${v}">${item(dim,v)?.name||v}</option>`).join("")); };
+fill(document.getElementById("fPlace"), "place"); fill(document.getElementById("fClub"), "club");
+setTimeout(()=>applyFilters());
+function applyFilters(){
+  const on = filt.comp || filt.place || filt.club;
+  page.querySelectorAll(".cell").forEach(c=>{
+    c.classList.toggle("dim", on && !matches(+c.dataset.i));
+  });
+  document.getElementById("fComp").setAttribute("aria-checked", String(filt.comp));
+  document.getElementById("fClear").hidden = !on;
+  /* only offer choices that leave at least one month: no club that never trained in the chosen location, and so on */
+  document.querySelectorAll("#fPlace option").forEach(o=>{ if(o.value) o.disabled = countWith({place:o.value})===0; });
+  document.querySelectorAll("#fClub option").forEach(o=>{ if(o.value) o.disabled = countWith({club:o.value})===0; });
+  document.getElementById("fComp").disabled = !filt.comp && countWith({comp:true})===0;
+  controls();
+}
+/* changing a filter closes the month panel; focus stays on the filter */
+document.getElementById("fComp").onclick=()=>{ deselect(false); filt.comp=!filt.comp; applyFilters(); };
+document.getElementById("fPlace").onchange=e=>{ deselect(false); filt.place=e.target.value; applyFilters(); };
+document.getElementById("fClub").onchange=e=>{ deselect(false); filt.club=e.target.value; applyFilters(); };
+document.getElementById("fClear").onclick=()=>{ deselect(false); filt.comp=false; filt.place=""; filt.club=""; document.getElementById("fPlace").value=""; document.getElementById("fClub").value=""; applyFilters(); document.getElementById("fComp").focus(); };
+initial = false;
+addEventListener("keydown", e=>{ if(e.key==="Tab") document.documentElement.classList.add("kbd"); });
+addEventListener("pointerdown", ()=>document.documentElement.classList.remove("kbd"));
+if(fromHash!=null) band.scrollIntoView({block:"nearest"});
+    </script>
+  </body>
+</html>
+
+<style is:global>
+/* elements switched off by the script stay hidden even when a rule below sets their display */
+[hidden]{display:none!important}
+/* The page is one 12-column grid: one month per column. A tighter gutter than the CV so the icons sit close. */
+.page{--gutter:clamp(6px,1vw,14px);position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gutter);
+  padding-left:max(var(--margin),env(safe-area-inset-left,0px));padding-right:max(var(--margin),env(safe-area-inset-right,0px));padding-block:var(--margin)}
+
+/* Detail band: opens directly under the row of the chosen month, at full height. Nothing scrolls inside it. */
+.band{grid-column:1/-1;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:8px;display:flex;flex-direction:column}
+.close{align-self:flex-end;font:inherit;font-size:1.75rem;font-weight:400;line-height:1;color:var(--ink);background:none;border:0;padding:6px 0 0;min-width:44px;min-height:44px;text-align:right;cursor:pointer}
+.close:hover{color:var(--signal)}
+.band article.is-current{padding-top:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.band article{display:none;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gutter);padding-block:12px 16px;align-items:start}
+.band article.is-current{display:grid}
+.month{grid-column:1/span 5;font-size:clamp(2rem,5.2vw,4.5rem);font-weight:700;line-height:.85;letter-spacing:-.045em}
+.month small{display:block;font-size:clamp(.875rem,1.2vw,1.125rem);font-weight:500;letter-spacing:0;line-height:1.3;margin-top:.6em}
+.month .count{color:var(--signal);font-weight:700}
+.facts{grid-column:6/span 2;font-size:.875rem;line-height:1.35}
+.facts dt{color:var(--muted);font-size:.75rem}
+.facts dd{margin-bottom:.4em;font-weight:500}
+.facts a{font-weight:700}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.comps{grid-column:8/span 5;font-size:.8125rem;line-height:1.35;list-style:none}
+.comps li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding:3px 0;border-top:1px solid var(--rule)}
+.comps li:first-child{border-top:0}
+.comps .m{width:10px;height:10px;border-radius:50%;margin-top:.3em;border:1.5px solid var(--muted)}
+.comps .meta{color:var(--muted)}
+.comps .rec{font-variant-numeric:tabular-nums;white-space:nowrap}
+.comps .none{grid-column:1/-1;color:var(--muted)}
+.title{grid-column:1/-1;font-size:clamp(2.25rem,6vw,5rem);font-weight:700;line-height:.85;letter-spacing:-.05em}
+/* controls stay at the top of the screen while the grid scrolls */
+.bar{grid-column:1/-1;position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--paper);padding-block:14px 12px;margin-top:10px;border-bottom:1px solid var(--ink)}
+.controls{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+/* filters: plain type, the pressed state is solid ink like the rules */
+.filters{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:10px;font-size:.875rem}
+.filters label{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.filters select{font:inherit;color:var(--ink);font-weight:700;background:transparent;border:0;border-bottom:1px solid var(--ink);border-radius:0;padding:2px 2px;max-width:46vw}
+.filters button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:0;padding:2px 9px;cursor:pointer}
+/* Competitions switch: a square track and thumb in ink, like the site's rules and bars. On fills the track. */
+.switch{display:inline-flex;align-items:center;gap:8px;border:0!important;padding:2px 0!important;background:none;font-weight:700}
+.switch .track{position:relative;width:38px;height:20px;border:1.5px solid var(--ink);flex:none;transition:background .15s}
+.switch .thumb{position:absolute;top:2px;left:2px;width:13px;height:13px;background:var(--ink);transition:transform .15s,background .15s}
+.switch[aria-checked="true"] .track{background:var(--ink)}
+.switch[aria-checked="true"] .thumb{background:var(--paper);transform:translateX(18px)}
+.switch:hover .track{border-color:var(--signal)}
+.switch[aria-checked="true"]:hover .track{background:var(--signal)}
+.filters button:disabled{opacity:.35;cursor:default}
+#fClear{border-color:transparent;text-decoration:underline;text-underline-offset:.2em;padding-inline:0}
+.cell.dim{opacity:.3}
+/* no focus ring on the filters after a click or tap; keyboard users still get one */
+html:not(.kbd) .filters :focus,html:not(.kbd) .filters :focus-visible{outline:none}
+.cell,.band{scroll-margin-top:124px}
+.controls button{font:inherit;font-size:clamp(.875rem,1.2vw,1rem);font-weight:700;color:var(--ink);background:none;border:0;padding:4px 0;text-decoration:underline;text-underline-offset:.2em;cursor:pointer}
+.controls button:hover{color:var(--signal)}
+#next{text-align:right}
+.controls button:disabled{color:var(--muted);font-weight:400;text-decoration:none;cursor:default}
+
+/* Years: a label line, then twelve icons, one per column. */
+.year{grid-column:1/-1;font-size:.75rem;font-weight:700;letter-spacing:.02em;padding-top:6px;margin-top:4px;border-top:1px solid var(--rule)}
+/* no grey rule (or extra space) straight after a black line: under the controls or under an open panel */
+.bar + .year,.band + .year{border-top:0;margin-top:0}
+.cell{display:block;aspect-ratio:1;margin-block:4px}
+.cell svg{display:block;width:100%;height:100%}
+.cell[aria-current="true"]{outline:3px solid var(--signal);outline-offset:2px;border-radius:50%}
+.cell:hover svg{transform:scale(1.05)}
+.blank{aspect-ratio:1}
+
+@media (max-width:760px){
+  /* filters fill the width: competitions across the top, location and club side by side, labels above */
+  .filters{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+  #fComp{grid-column:1/-1;justify-self:start;padding-block:4px!important}
+  .filters label{display:grid;gap:2px;font-size:.75rem;min-width:0}
+  .filters select{width:100%;max-width:none;font-size:.875rem;padding-block:4px}
+  #fClear{grid-column:1/-1;justify-self:end}
+  .month{grid-column:1/-1}
+  .facts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:0 14px;margin-top:10px}
+  .facts div{display:flex;gap:5px;align-items:baseline}
+  .comps{grid-column:1/-1;margin-top:6px}
+}
+@media (prefers-reduced-motion:reduce){.switch .track,.switch .thumb{transition:none}.cell:hover svg{transform:none}}
+
+.crumbs{grid-column:1/-1;font-weight:700;margin-bottom:1.5rem}
+.crumbs a{text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.crumbs span{color:var(--muted);font-weight:400;margin-inline:.4em}
+.nojs{grid-column:1/-1;margin-top:1rem}
+</style>

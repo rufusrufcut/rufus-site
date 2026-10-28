@@ -1,0 +1,72 @@
+---
+// Data Visualisations index (/data-visualisations/): a list of the personal data pieces on the site.
+// Add a piece by adding one object to the list below.
+import '../../styles/base.css';
+
+const pieces = [
+  {
+    title: 'BJJ Data Visualisation',
+    href: '/data-visualisations/bjj/',
+    summary: 'Thirteen years of Brazilian jiu-jitsu, one icon per month: where I lived, my club, my belt and the medals I won.',
+  },
+];
+---
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Data Visualisations, Rufus Spiller</title>
+    <meta name="description" content="Personal data visualisations by Rufus Spiller, UX designer and researcher based in Glasgow." />
+    <meta name="theme-color" content="#f2efe8" />
+  </head>
+  <body>
+    <header class="dv-header grid">
+      <a class="home" href="/">Rufus Spiller</a>
+      <h1 class="dv-title">Data<br />Visualisations</h1>
+    </header>
+    <main class="grid">
+      <ol class="pieces">
+        {pieces.map((piece) => (
+          <li class="piece">
+            <a class="piece-link" href={piece.href}>{piece.title}</a>
+            <p class="piece-summary">{piece.summary}</p>
+          </li>
+        ))}
+      </ol>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Same 12-column grid and header pattern as the CV page. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--gutter);
+    padding-inline: var(--margin);
+  }
+  .dv-header { padding-block: var(--margin) calc(var(--margin) * 2); row-gap: 1.5rem; }
+  .home { grid-column: 1 / -1; font-weight: 700; }
+  .dv-title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 12vw, 10rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+  .pieces { grid-column: 1 / -1; list-style: none; border-top: 1px solid var(--ink); }
+  .piece {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    padding-block: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .pieces { display: grid; grid-template-columns: subgrid; }
+  .piece-link { grid-column: 1 / span 5; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+  .piece-summary { grid-column: 7 / -1; max-width: 50ch; }
+
+  @media (max-width: 760px) {
+    .piece-link, .piece-summary { grid-column: 1 / -1; }
+    .piece-summary { margin-top: 0.5rem; }
+  }
+</style>
