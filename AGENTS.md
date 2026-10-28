@@ -8,6 +8,7 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 - Every task fits one block and ends with a commit and a live deploy. Ask at the start: short block (30 to 60 min) or Monday block (2 to 3 hrs)?
 - For every task give: what and why, the concept, steps with code and file names, how to check, commit message, one-line LEARNING.md entry.
 - A comment at the top of every file saying what it does.
+- Every page shows "Last updated" with the date directly under the page title, using src/components/LastUpdated.astro. Update the date whenever the page's content changes.
 - WCAG 2.2 AA minimum. No em dashes in any copy. Never invent outcomes, metrics, clients or quotes.
 - When inspecting this repo from outside, use `git --no-optional-locks` so no lock files are left behind.
 

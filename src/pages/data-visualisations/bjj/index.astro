@@ -4,6 +4,7 @@
 // the ring shows medals won that month (default medals left out), dashed if he competed without a medal.
 // Data: src/data/bjj-months.json (from the BJJ Stats sheet) and src/data/icon-registry.json (shapes and assignments).
 import '../../../styles/base.css';
+import LastUpdated from '../../../components/LastUpdated.astro';
 import months from '../../../data/bjj-months.json';
 import registry from '../../../data/icon-registry.json';
 const data = JSON.stringify({ months, registry });
@@ -21,6 +22,7 @@ const data = JSON.stringify({ months, registry });
 
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Rufus Spiller</a><span aria-hidden="true">/</span><a href="/data-visualisations/">Data Visualisations</a></nav>
   <h1 class="title">BJJ Data Visualisation</h1>
+  <LastUpdated date="2026-10-28" />
   <div class="bar">
     <nav class="controls" aria-label="Step through months">
       <button type="button" id="prev"></button>
@@ -202,6 +204,8 @@ if(fromHash!=null) band.scrollIntoView({block:"nearest"});
 <style is:global>
 /* elements switched off by the script stay hidden even when a rule below sets their display */
 [hidden]{display:none!important}
+/* a little air between the tight title and the Last updated line */
+.title + .last-updated{margin-top:.6rem}
 /* The page is one 12-column grid: one month per column. A tighter gutter than the CV so the icons sit close. */
 .page{--gutter:clamp(6px,1vw,14px);position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gutter);
   padding-left:max(var(--margin),env(safe-area-inset-left,0px));padding-right:max(var(--margin),env(safe-area-inset-right,0px));padding-block:var(--margin)}

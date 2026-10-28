@@ -1,0 +1,25 @@
+---
+// "Last updated" line. Site rule: every page shows it directly under the page title.
+// Pass the date the page last changed as YYYY-MM-DD, e.g. <LastUpdated date="2026-10-28" />.
+interface Props {
+  date: string;
+}
+const { date } = Astro.props;
+const label = new Date(`${date}T00:00:00Z`).toLocaleDateString('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+<p class="last-updated">Last updated <time datetime={date}>{label}</time></p>
+
+<style>
+  /* Small and muted, spanning the full grid when the parent is a grid. Muted grey is 6.5:1 on the paper. */
+  .last-updated {
+    grid-column: 1 / -1;
+    font-size: 0.875rem;
+    line-height: 1.3;
+    color: var(--muted);
+  }
+</style>
