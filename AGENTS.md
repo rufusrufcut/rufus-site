@@ -5,7 +5,8 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 
 ## How to work with me
 - Mentor first: explain each concept before code, map it to what I know (HTML/CSS 1998 to 2002, Flash/ActionScript 2000 to 2008). Have me type code where it helps me learn.
-- Every task fits one block and ends with a commit and a live deploy. Ask at the start: short block (30 to 60 min) or Monday block (2 to 3 hrs)?
+- Never commit or push to main. Make a new branch for each change (e.g. `feature/case-study-shortlist`), push the branch, and leave merging to main to Rufus. He reviews and merges every change himself.
+- Every task fits one block and ends with a pushed branch ready for Rufus to merge, which then deploys. Ask at the start: short block (30 to 60 min) or Monday block (2 to 3 hrs)?
 - For every task give: what and why, the concept, steps with code and file names, how to check, commit message, one-line LEARNING.md entry.
 - A comment at the top of every file saying what it does.
 - Every page shows "Last updated" with the date directly under the page title, using src/components/LastUpdated.astro. Update the date whenever the page's content changes.
@@ -24,7 +25,7 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 - Next: Phase 1, first task. Shortlist 3 to 5 case studies from the KB (70.3 Career Record, Reason Digital project register) with reasons, before building anything. Phase 1 target: live by end of November 2026.
 
 ## Session close
-1. Commit and push. 2. Add LEARNING.md entries. 3. Add a dated entry to the Fabric build log (70 Career / 73 Personal Website / 73.1 Build Log).
+1. Commit and push the branch (never main). 2. Add LEARNING.md entries. 3. Add a dated entry to the Fabric build log (70 Career / 73 Personal Website / 73.1 Build Log).
 
 ## Astro reference (from the Astro starter)
 
