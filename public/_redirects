@@ -1,0 +1,4 @@
+# Redirects: Cloudflare reads this file from dist/ and sends permanent (301) redirects.
+# Format: old path, new path, status code. One rule per line.
+/data-visualisations/bjj/ /data-visualisations/jiu-jitsu/ 301
+/data-visualisations/bjj /data-visualisations/jiu-jitsu/ 301
