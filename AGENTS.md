@@ -18,6 +18,13 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 - Hosting: Cloudflare Workers static assets via Workers Builds. Config in wrangler.jsonc (assets from ./dist). Build `npm run build`, deploy `npx wrangler deploy`. Every push to main deploys.
 - Domain: rufusspiller.com (Cloudflare Registrar). www.rufusspiller.com 301-redirects to it via a zone Redirect Rule.
 
+## Site concepts
+- Icons persist. An icon belongs to one concept (e.g. Glasgow) and looks the same on every page. Change it once, it changes everywhere.
+- Icons can be composites made of parts (e.g. the Jiu-Jitsu icons are Place plus Club/Team, coloured by belt).
+- A change to a part carries through to every composite that uses it. So composites reference parts by id; they never copy shapes.
+- Source: src/data/icon-registry.json (exported from the Icon Registry). Pages read it; no page hard-codes a shape.
+- Open issue (29 Oct 2026): place and club shapes overlap (shapes 1 to 4 are each used by one place and one club), so a shape alone does not yet identify one concept.
+
 ## Status
 - Phase 0 done (28 Sep 2026): holding page live. CV removed for now (the old PDF remains in Git history at commit 2361fd6).
 - CV page live at /cv/ (28 Sep 2026), built from the KB Career Record, contact details omitted. Linked from home.
