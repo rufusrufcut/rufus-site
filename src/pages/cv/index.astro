@@ -5,7 +5,7 @@
 // Source of truth for titles and dates: Fabric KB, 70.3 Career Record (checked 28 Sep 2026).
 import '../../styles/base.css';
 import LastUpdated from '../../components/LastUpdated.astro';
-import ConceptIcon from '../../components/ConceptIcon.astro';
+import PlaceLabel from '../../components/PlaceLabel.astro';
 
 const headline = 'UX/UI Design Specialist, Creative Team Manager, Accessibility Standards (WCAG), Design Systems, Digital Product Design';
 
@@ -109,7 +109,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
       <h1 class="cv-title">Curriculum<br />vitae</h1>
       <LastUpdated date="2026-11-02" />
       <p class="headline">{headline}</p>
-      <p class="links"><span class="place"><ConceptIcon concept="place" id="glasgow" />Glasgow, Scotland</span><br /><span class="print-only"><a href="https://rufusspiller.com">rufusspiller.com</a><br /></span><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
+      <p class="links"><PlaceLabel id="glasgow">Glasgow, Scotland</PlaceLabel><br /><span class="print-only"><a href="https://rufusspiller.com">rufusspiller.com</a><br /></span><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
     </header>
 
     <main>
@@ -123,7 +123,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
         <ol class="content entries">
           {roles.map((role) => (
             <li class="entry">
-              <p class="meta">{role.dates}<br /><span class="place"><ConceptIcon concept="place" id={role.placeId} />{role.place}</span></p>
+              <p class="meta">{role.dates}<br /><span class="place"><PlaceLabel id={role.placeId}>{role.place}</PlaceLabel></span></p>
               <div class="detail">
                 <h3>{role.title}</h3>
                 <p class="org">{role.org}</p>
@@ -154,7 +154,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
         <div class="content entries">
           {education.map((e) => (
             <div class="entry">
-              <p class="meta">{e.dates}<br /><span class="place"><ConceptIcon concept="place" id={e.placeId} />{e.place}</span></p>
+              <p class="meta">{e.dates}<br /><span class="place"><PlaceLabel id={e.placeId}>{e.place}</PlaceLabel></span></p>
               <div class="detail"><h3>{e.title}</h3><p class="org">{e.org}</p></div>
             </div>
           ))}
@@ -241,11 +241,8 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
   .entry:first-child { padding-top: 0; }
   .entry:last-child { border-bottom: none; } /* no rule under the last entry; the next section's top rule follows */
   .meta { font-size: 0.875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-  /* A place: its registry shape, then its name. The shape is decorative; the name carries the meaning. */
-  /* Place icons use the site's highlight colour from the design tokens, so they follow it if it changes. */
-  :global(body) { --concept-icon-colour: var(--signal); }
-  .place { display: inline-flex; align-items: flex-start; gap: 0.4em; margin-top: 0.2em; }
-  .place :global(.concept-icon) { margin-top: -0.1em; } /* lines up with the first line when the place wraps */
+  /* Place labels (icon and name) come from the PlaceLabel component; here they only get a little space above. */
+  .place { display: inline-block; margin-top: 0.2em; }
   .detail h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; }
   .org { font-weight: 500; }
   .detail ul { margin-top: 0.5rem; padding-left: 1.1em; max-width: 65ch; }

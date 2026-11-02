@@ -9,7 +9,7 @@ Personal portfolio and learning project. Two jobs: get Rufus hired into a senior
 - For every task give: what and why, the concept, steps with code and file names, how to check, commit message, one-line LEARNING.md entry.
 - A comment at the top of every file saying what it does.
 - Every page shows "Last updated" with the date directly under the page title, using src/components/LastUpdated.astro. Update the date whenever the page's content changes.
-- One shape per concept, site-wide. Wherever a place (or other concept in src/data/icon-registry.json) is shown, show its shape with src/components/ConceptIcon.astro next to its name. Reassign a shape only in the registry, never per page.
+- Follow DESIGN-SYSTEM.md (tokens, components and their rules). In particular: wherever a place is shown as a label (not inside running text), use src/components/PlaceLabel.astro so it carries its registry shape in the highlight colour. Reassign shapes only in src/data/icon-registry.json, never per page.
 - WCAG 2.2 AA minimum. No em dashes in any copy. Never invent outcomes, metrics, clients or quotes.
 - When inspecting this repo from outside, use `git --no-optional-locks` so no lock files are left behind.
 

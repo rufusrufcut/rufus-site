@@ -5,9 +5,11 @@
 // Data: src/data/bjj-months.json (from the BJJ Stats sheet) and src/data/icon-registry.json (shapes and assignments).
 import '../../../styles/base.css';
 import LastUpdated from '../../../components/LastUpdated.astro';
+import PlaceLabel from '../../../components/PlaceLabel.astro';
 import months from '../../../data/bjj-months.json';
 import registry from '../../../data/icon-registry.json';
 const data = JSON.stringify({ months, registry });
+const places = registry.dimensions.place.items;
 ---
 <html lang="en-GB">
   <head>
@@ -25,7 +27,7 @@ const data = JSON.stringify({ months, registry });
 
   <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Rufus Spiller</a><span aria-hidden="true">/</span><a href="/data-visualisations/">Data Visualisations</a></nav>
   <h1 class="title">Jiu-Jitsu</h1>
-  <LastUpdated date="2026-10-29" />
+  <LastUpdated date="2026-11-02" />
   <div class="bar">
     <nav class="controls" aria-label="Step through months">
       <button type="button" id="prev"></button>
@@ -42,6 +44,8 @@ const data = JSON.stringify({ months, registry });
   <section class="band" id="band" aria-live="polite" aria-label="Selected month" hidden></section>
     </main>
     <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="defs"></defs></svg>
+    <!-- One place label per place, built by the PlaceLabel component; the script copies them into the month panel. -->
+    {places.map((p) => <template id={`place-${p.id}`}><PlaceLabel id={p.id} /></template>)}
     <script type="application/json" id="bjj-data" set:html={data}></script>
     <script is:inline>
 /* Draws the month grid in the browser from the JSON above, then handles selection, filters and arrow keys. */
@@ -55,6 +59,8 @@ const MONTHS = ["January","February","March","April","May","June","July","August
 const item = (dim,id) => (R.dimensions[dim].items.find(x=>x.id===id) || null);
 const label = ym => `${MONTHS[+ym.slice(5)-1]} ${ym.slice(0,4)}`;
 const id = ym => "m-" + ym;
+/* place labels (shape and name) come from the PlaceLabel templates in the page, so they match the rest of the site */
+const placeLabel = p => { const t = document.getElementById("place-" + p.id); return t ? t.innerHTML : p.name; };
 
 /* each unit shape is defined once as a symbol and reused, which keeps the page small */
 document.getElementById("defs").innerHTML = Object.entries(R.shapes).map(([k,v])=>`<symbol id="s${k}" viewBox="0 0 150 150">${v}</symbol>`).join("");
@@ -95,7 +101,7 @@ M.forEach((mo,i)=>{
   const won=mo.comps.reduce((a,c)=>a+c.w,0), lost=mo.comps.reduce((a,c)=>a+c.l,0);
   panels += `<article id="${id(mo.month)}" data-i="${i}">
     <h2 class="month">${label(mo.month)}${mo.comps.length?`<small>${won} won, ${lost} lost · <span class="count">${md} medal${md===1?"":"s"}</span></small>`:""}</h2>
-    <dl class="facts"><div><dt>Place</dt><dd>${pl?pl.name:"Unknown"}</dd></div><div><dt>Club</dt><dd>${cl?(CLUB_URL[mo.club]?`<a href="${CLUB_URL[mo.club]}" target="_blank" rel="noopener">${cl.name}<span class="vh"> (opens in a new tab)</span></a>`:cl.name):"Unknown"}</dd></div><div><dt>Belt</dt><dd>${be?be.name:"Unknown"}</dd></div></dl>
+    <dl class="facts"><div><dt>Place</dt><dd>${pl?placeLabel(pl):"Unknown"}</dd></div><div><dt>Club</dt><dd>${cl?(CLUB_URL[mo.club]?`<a href="${CLUB_URL[mo.club]}" target="_blank" rel="noopener">${cl.name}<span class="vh"> (opens in a new tab)</span></a>`:cl.name):"Unknown"}</dd></div><div><dt>Belt</dt><dd>${be?be.name:"Unknown"}</dd></div></dl>
     <ul class="comps">${mo.comps.length ? mo.comps.map(c=>`<li><i class="m" style="${c.medal?`background:${MEDAL[c.medal]};border-color:${MEDAL[c.medal]}`:""}"></i>
       <span>${(c.org||"").trim()?(c.org||"").trim()+" | ":""}${c.name}<br><span class="meta">${[c.type,c.cat,c.weight].filter(Boolean).join(" · ")}</span></span>
       <span class="rec">${c.w}W ${c.l}L${c.d?" "+c.d+"D":""}${c.place&&!c.default?" · "+["","1st","2nd","3rd","4th"][c.place]:""}</span></li>`).join("") : ""}</ul>

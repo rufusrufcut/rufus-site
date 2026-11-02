@@ -1,0 +1,38 @@
+---
+// Place label: a place's registry shape followed by its name.
+// Design system rule: wherever a place is shown as a label (not inside running text),
+// use this component, so the place always carries its shape. See DESIGN-SYSTEM.md.
+// The shape comes from src/data/icon-registry.json; the colour is the highlight token (--signal).
+// Usage: <PlaceLabel id="melbourne" /> shows the registry name ("Melbourne").
+//        <PlaceLabel id="melbourne">Melbourne, Australia</PlaceLabel> shows your own wording.
+import ConceptIcon from './ConceptIcon.astro';
+import registry from '../data/icon-registry.json';
+
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+const item = registry.dimensions.place.items.find((i) => i.id === id);
+const name = item ? item.name : id; // ConceptIcon stops the build if the id is unknown
+---
+<span class="place-label"><ConceptIcon concept="place" id={id} /><span class="name"><slot>{name}</slot></span></span>
+
+<style>
+  /* Icon then name, top-aligned so the icon sits on the first line when a long name wraps.
+     The icon is decorative (aria-hidden); the name carries the meaning for screen readers.
+     The icon takes the highlight colour; change --signal in base.css and every place label follows. */
+  .place-label {
+    --concept-icon-colour: var(--signal);
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.4em;
+  }
+  .place-label :global(.concept-icon) {
+    margin-top: -0.1em;
+  }
+  /* The name sets the label's baseline, so the label lines up with text beside it
+     (for example a "Place" heading on the same line). */
+  .name {
+    align-self: baseline;
+  }
+</style>
