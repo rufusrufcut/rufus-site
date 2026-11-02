@@ -242,6 +242,8 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
   .entry:last-child { border-bottom: none; } /* no rule under the last entry; the next section's top rule follows */
   .meta { font-size: 0.875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   /* A place: its registry shape, then its name. The shape is decorative; the name carries the meaning. */
+  /* Place icons use the site's highlight colour from the design tokens, so they follow it if it changes. */
+  :global(body) { --concept-icon-colour: var(--signal); }
   .place { display: inline-flex; align-items: flex-start; gap: 0.4em; margin-top: 0.2em; }
   .place :global(.concept-icon) { margin-top: -0.1em; } /* lines up with the first line when the place wraps */
   .detail h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; }

@@ -34,7 +34,8 @@ const shape = registry.shapes[String(item.shape)];
 </svg>
 
 <style>
-  /* Sized to the surrounding text and drawn in ink. Same geometry as the Jiu-Jitsu
+  /* Sized to the surrounding text. Drawn in ink unless the page sets --concept-icon-colour
+     (the CV sets it to the highlight colour, --signal). Same geometry as the Jiu-Jitsu
      visualisation: the shape inside a circle container (r 73 in a 150 box), so every
      concept keeps the same scale and only its form changes. The circle's line stays
      1px at any size (non-scaling stroke), so it doesn't vanish when the icon is small. */
@@ -42,11 +43,11 @@ const shape = registry.shapes[String(item.shape)];
     width: 1.5em;
     height: 1.5em;
     flex: none;
-    fill: var(--ink);
+    fill: var(--concept-icon-colour, var(--ink));
   }
   .container {
     fill: none;
-    stroke: var(--ink);
+    stroke: var(--concept-icon-colour, var(--ink));
     stroke-width: 1px;
     vector-effect: non-scaling-stroke;
   }
