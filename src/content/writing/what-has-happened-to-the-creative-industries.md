@@ -5,19 +5,19 @@ summary: Some thoughts about craft, AI tools, the next generation and the soul o
 published: 2026-11-02
 ---
 
-What has happened to the Creative Industries? We used to be the lefty, socially conscious and touchy feely people in the room. We were all concepts and consideration. The feels over the finance. Telling corporations that they needed to understand the real world value of their tone of voice.
+We used to be the lefty, socially conscious and touchy feely people in the room. We were all concepts and consideration. The feels over the finance. Telling corporations that they needed to understand the real world value of their tone of voice.
 
 And I get it, we need to pay the bills and keep the lights on. We needed to use the C-suite languages to be asked into the boardroom. But I am beginning to wonder that we have adopted this posture and drifted to a strange place where we are losing our souls.
 
 My LinkedIn timeline is filled with ‘I smashed out this thing on Claude’ and my gut does a flip. What about the cost to the craft of design, if you can smash it out what’s to stop the CFO doing the same? What about the cost to the industry as a whole? The hollowing out of opportunity for a young designer to do that work. The environmental cost?
 
-I’ve had graduates reach out to me saying that paid internships are on the decline. I’m seeing reports that the industry (and not this industry) is asking for more experience at less pay.
+I’ve had graduates reach out to me saying that paid internships are on the decline. I’m seeing reports that the industry (and not just this industry) is asking for more experience at less pay.
 
-I was watching at a conference last year and each speaker echoed the same message about AI tools, ‘Just have a play’. It made me itch a bit and at the end I asked, ‘what does that mean for the environment’? Should we just spamming the prompt button, making endless mindless mistakes in the hope of creating ‘good enough’? Should we think about that? I was answered by a kind of dismissive, you just don’t get it. But what if we are making design worse?
+I was at a conference last year and each speaker echoed the same message about AI tools, ‘Just have a play’. It made me itch a bit and at the end I asked, ‘what does that mean for the environment’? Should we just be spamming the prompt button, making endless mindless mistakes in the hope of creating ‘good enough’? Should we think about that? I was answered by a kind of dismissive, you just don’t get it. But what if we are making design worse?
 
 My buddy Rose and I were chatting about this and she reminded me that the Luddites weren’t just indiscriminately smashing up looms because they hated the technology. They saw the opportunity of these new tools but they were pointing out that the product was often inferior and that the owners needed to consider the ultimate impact these new tools would have on an established industry.
 
-This is not an AI essay it’s some thoughts about the soul of our industry. I have often worried that we are not unionised, although I can’t really see what would happen if we all walked out... Less shelf wobblers? However without a union or a collective we can be an industry of insularity. Dreamers who are a bit too self absorbed.
+This is not an AI essay. It’s some thoughts about the soul of our industry. I have often worried that we are not unionised, although I can’t really see what would happen if we all walked out... Less shelf wobblers? However without a union or a collective we can be an industry of insularity. Dreamers who are a bit too self absorbed.
 
 Back in the 2000’s I was involved in a whole bunch of initiatives that were trying to elevate the Scottish Design Industry. The point was to get a seat at the table if independence happened. We wanted to remind any incoming government that the creative industries brings significant money into the economy and it should be supported and invested in.
 
