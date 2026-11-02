@@ -29,7 +29,7 @@ Change a value here and everything that uses the token follows. Check contrast a
 | --- | --- | --- |
 | `LastUpdated` | "Last updated" line with a date | On every page, directly under the page title. Update the date when the page changes. |
 | `ConceptIcon` | One concept's shape in its circle | Low-level: draws in ink unless the page sets `--concept-icon-colour`. Decorative (hidden from screen readers), so its name must sit beside it. Use `PlaceLabel` for places. |
-| `PlaceLabel` | A place's icon, in the highlight colour, followed by its name | **Wherever a place is shown as a label, use `PlaceLabel`.** |
+| `PlaceLabel` | A place's icon, in the highlight colour (or the data's colour, see below), followed by its name | **Wherever a place is shown as a label, use `PlaceLabel`.** |
 
 ### Place labels
 
@@ -48,5 +48,7 @@ Usage:
 ```
 
 Pages that draw in the browser (like the Jiu-Jitsu visualisation) render a `<template>` per place with `PlaceLabel` at build time and copy it in, so the markup is identical everywhere.
+
+In a data visualisation where colour carries data, the place label's icon takes that colour instead of the highlight, by setting `--place-label-colour`. On the Jiu-Jitsu page it is the belt colour for that month, matching the month's icon in the grid. Any colour used this way must reach 3:1 on the paper.
 
 A place id that isn't in the registry stops the build, so a typo can't ship a label without its icon.
