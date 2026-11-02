@@ -1,0 +1,84 @@
+---
+// A written piece (/writing/<slug>/). One page is built per Markdown file in src/content/writing/.
+// [slug] in the file name is a placeholder: getStaticPaths lists every value, Astro builds a page for each.
+import '../../styles/base.css';
+import LastUpdated from '../../components/LastUpdated.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const pieces = await getCollection('writing', ({ data }) => !data.draft);
+  return pieces.map((piece) => ({ params: { slug: piece.id }, props: { piece } }));
+}
+
+const { piece } = Astro.props;
+const { Content } = await render(piece); // the Markdown body, turned into HTML
+const { title, summary, published, updated } = piece.data;
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}, Rufus Spiller</title>
+    <meta name="description" content={summary} />
+    <meta name="author" content="Rufus Spiller" />
+    <meta name="theme-color" content="#f2efe8" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <header class="a-header grid">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Rufus Spiller</a><span aria-hidden="true">/</span><a href="/writing/">Writing</a></nav>
+      <h1 class="a-title">{title}</h1>
+      <LastUpdated date={iso(updated ?? published)} />
+      {updated && <p class="a-published">First published <time datetime={iso(published)}>{readable(published)}</time></p>}
+    </header>
+    <main class="grid">
+      <article class="prose">
+        <Content />
+      </article>
+      <p class="back"><a href="/writing/">All writing</a></p>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Same 12-column grid as the other pages. The text column is capped at a comfortable reading measure (about 65 characters). */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--gutter);
+    padding-inline: var(--margin);
+  }
+  .a-header { padding-block: var(--margin) calc(var(--margin) * 2); row-gap: 1.5rem; }
+  .crumbs { grid-column: 1 / -1; display: flex; gap: 0.5em; font-weight: 700; }
+  .a-title {
+    grid-column: 1 / span 10;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  .a-published { grid-column: 1 / -1; margin-top: -1.25rem; font-size: 0.875rem; color: var(--muted); }
+
+  .prose {
+    grid-column: 4 / span 7;
+    max-width: 65ch;
+    border-top: 1px solid var(--ink);
+    padding-top: 1.5rem;
+    font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+    line-height: 1.6;
+  }
+  /* Markdown output isn't in this file's markup, so :global() lets these rules reach it. */
+  .prose :global(p + p) { margin-top: 1em; }
+  .prose :global(h2) { margin-top: 2em; font-size: 1.5em; line-height: 1.1; letter-spacing: -0.02em; }
+  .prose :global(blockquote) { margin-block: 1.5em; padding-left: 1em; border-left: 3px solid var(--signal); }
+
+  .back { grid-column: 4 / span 7; padding-block: 2rem var(--margin); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .a-title, .prose, .back { grid-column: 1 / -1; }
+  }
+</style>

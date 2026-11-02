@@ -1,0 +1,86 @@
+---
+// Writing index (/writing/): every written piece, newest first.
+// Add a piece by adding a Markdown file to src/content/writing/ (see src/content.config.ts for the fields).
+import '../../styles/base.css';
+import LastUpdated from '../../components/LastUpdated.astro';
+import { getCollection } from 'astro:content';
+
+const pieces = (await getCollection('writing', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+
+// Machine date (YYYY-MM-DD) and readable date (2 November 2026) for the time element.
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+
+// The list changes when a piece is added or edited, so the page's date is the latest of those.
+const lastChange = pieces
+  .map((p) => p.data.updated ?? p.data.published)
+  .reduce((latest, d) => (d > latest ? d : latest), new Date('2026-11-02'));
+---
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Writing, Rufus Spiller</title>
+    <meta name="description" content="Written pieces by Rufus Spiller, UX designer and researcher based in Glasgow." />
+    <meta name="theme-color" content="#f2efe8" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <header class="w-header grid">
+      <a class="home" href="/">Rufus Spiller</a>
+      <h1 class="w-title">Writing</h1>
+      <LastUpdated date={iso(lastChange)} />
+    </header>
+    <main class="grid">
+      <ol class="pieces">
+        {pieces.map((piece) => (
+          <li class="piece">
+            <div class="piece-head">
+              <a class="piece-link" href={`/writing/${piece.id}/`}>{piece.data.title}</a>
+              <time class="piece-date" datetime={iso(piece.data.published)}>{readable(piece.data.published)}</time>
+            </div>
+            <p class="piece-summary">{piece.data.summary}</p>
+          </li>
+        ))}
+      </ol>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Same 12-column grid and list pattern as the Data Visualisations index. */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: var(--gutter);
+    padding-inline: var(--margin);
+  }
+  .w-header { padding-block: var(--margin) calc(var(--margin) * 2); row-gap: 1.5rem; }
+  .home { grid-column: 1 / -1; font-weight: 700; }
+  .w-title {
+    grid-column: 1 / -1;
+    font-size: clamp(3rem, 12vw, 10rem);
+    line-height: 0.85;
+    letter-spacing: -0.05em;
+  }
+  .pieces { grid-column: 1 / -1; list-style: none; border-top: 1px solid var(--ink); display: grid; grid-template-columns: subgrid; }
+  .piece {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    padding-block: 1rem 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .piece-head { grid-column: 1 / span 6; display: flex; flex-direction: column; gap: 0.5rem; }
+  .piece-link { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; line-height: 1; letter-spacing: -0.03em; }
+  .piece-date { font-size: 0.875rem; color: var(--muted); }
+  .piece-summary { grid-column: 7 / -1; max-width: 50ch; }
+
+  @media (max-width: 760px) {
+    .piece-head, .piece-summary { grid-column: 1 / -1; }
+    .piece-summary { margin-top: 0.5rem; }
+  }
+</style>
