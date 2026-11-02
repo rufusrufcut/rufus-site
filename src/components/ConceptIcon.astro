@@ -1,0 +1,42 @@
+---
+// Concept icon: one shape per concept, site-wide.
+// Looks up a concept (for example the place "melbourne") in src/data/icon-registry.json
+// and draws the unit shape assigned to it. To reassign a shape, change the concept's
+// "shape" number in the registry: every page that shows the concept changes with it,
+// including the Jiu-Jitsu visualisation, which reads the same file.
+// Usage: <ConceptIcon concept="place" id="melbourne" />
+// The icon is decorative (aria-hidden), so always show the concept's name next to it.
+import registry from '../data/icon-registry.json';
+
+interface Props {
+  concept: 'place' | 'club';
+  id: string;
+}
+const { concept, id } = Astro.props;
+const item = registry.dimensions[concept]?.items.find((i) => i.id === id);
+// Fail the build on a typo rather than ship a page with a missing icon.
+if (!item || item.shape == null) {
+  throw new Error(`ConceptIcon: no shape assigned to ${concept} "${id}" in icon-registry.json`);
+}
+const shape = registry.shapes[String(item.shape)];
+---
+<svg
+  class="concept-icon"
+  viewBox="25 25 100 100"
+  aria-hidden="true"
+  focusable="false"
+  data-concept={concept}
+  data-id={id}
+  set:html={shape}
+/>
+
+<style>
+  /* Sized to the surrounding text and drawn in ink. The shapes sit in a 100 unit square,
+     so every concept keeps the same scale and only its form changes. */
+  .concept-icon {
+    width: 1.2em;
+    height: 1.2em;
+    flex: none;
+    fill: var(--ink);
+  }
+</style>

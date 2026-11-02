@@ -5,15 +5,17 @@
 // Source of truth for titles and dates: Fabric KB, 70.3 Career Record (checked 28 Sep 2026).
 import '../../styles/base.css';
 import LastUpdated from '../../components/LastUpdated.astro';
+import ConceptIcon from '../../components/ConceptIcon.astro';
 
 const headline = 'UX/UI Design Specialist, Creative Team Manager, Accessibility Standards (WCAG), Design Systems, Digital Product Design';
 
 const summary = `Experienced UX/UI Designer with a strong background of delivery of complex digital experiences across a wide variety of digital clients. Skilled in interaction design, visual design, and user-centred design, I excel at translating user needs and business requirements into intuitive and scalable design solutions. Collaborative by nature, I work closely with brand and development teams to align digital experiences with brand standards while fostering a culture of evidence-based design. I have also spent several years managing creative teams and working at board level to convert creative vision into bottom line outcomes.`;
 
 // One object per role. Add a role by adding an object; the layout updates itself.
+// placeId is the place's id in src/data/icon-registry.json, which sets its icon.
 const roles = [
   {
-    title: 'Senior UX Designer', org: 'Reason Digital', dates: 'Mar 2021 to present', place: 'Glasgow, remote',
+    title: 'Senior UX Designer', org: 'Reason Digital', dates: 'Mar 2021 to present', place: 'Glasgow, remote', placeId: 'glasgow',
     points: [
       'Human-centred UX and research for third sector organisations; accessibility and service design.',
       'Lead end-to-end discovery, prototype and delivery, turning complex policy and charity needs into clear deliverables (user journeys, IA and design systems).',
@@ -24,7 +26,7 @@ const roles = [
     ],
   },
   {
-    title: 'Creative Director (self-employed)', org: 'Jacob&Rufus', dates: 'Jun 2015 to Mar 2021', place: 'Hunedoara, Romania, remote',
+    title: 'Creative Director (self-employed)', org: 'Jacob&Rufus', dates: 'Jun 2015 to Mar 2021', place: 'Hunedoara, Romania, remote', placeId: 'hunedoara',
     points: [
       'Independent design practice delivering UX, brand and packaging design, often in collaboration with agencies.',
       'Partnered with agencies to provide design expertise for integrated campaigns and marketing activations.',
@@ -32,7 +34,7 @@ const roles = [
     ],
   },
   {
-    title: 'Creative Director (Asia Pacific Board)', org: 'Precedent', dates: 'Dec 2012 to Apr 2015', place: 'Melbourne, Australia',
+    title: 'Creative Director (Asia Pacific Board)', org: 'Precedent', dates: 'Dec 2012 to Apr 2015', place: 'Melbourne, Australia', placeId: 'melbourne',
     points: [
       'Led the Melbourne studio, set up by the London agency.',
       'Hired and managed two designers and led the agency’s creative output in Australia.',
@@ -41,30 +43,30 @@ const roles = [
     ],
   },
   {
-    title: 'Creative Director, Board Member and Shareholder', org: 'Line Digital', dates: 'Oct 2008 to Nov 2012', place: 'Edinburgh, Scotland',
+    title: 'Creative Director, Board Member and Shareholder', org: 'Line Digital', dates: 'Oct 2008 to Nov 2012', place: 'Edinburgh, Scotland', placeId: 'edinburgh',
     points: [
       'Creative digital solutions for clients including IKEA, Tesco Bank, Standard Life, Scottish Friendly and Edinburgh Festivals.',
       'Board responsibilities: pipeline, hiring and studio growth.',
     ],
   },
   {
-    title: 'Head of Digital', org: 'Good Creative', dates: 'Jan 2005 to Oct 2008', place: 'Glasgow, Scotland',
+    title: 'Head of Digital', org: 'Good Creative', dates: 'Jan 2005 to Oct 2008', place: 'Glasgow, Scotland', placeId: 'glasgow',
     points: ['Brought digital expertise into a brand and packaging agency, extending its offer into online channels.'],
   },
   {
-    title: 'Digital Designer', org: 'The Hub Agency', dates: 'Aug 2004 to Dec 2004', place: 'Glasgow, Scotland',
+    title: 'Digital Designer', org: 'The Hub Agency', dates: 'Aug 2004 to Dec 2004', place: 'Glasgow, Scotland', placeId: 'glasgow',
     points: ['Brought digital capability into an offline agency; delivered early responsive and interactive work.'],
   },
   {
-    title: 'Creative', org: 'It’s Not Rocket Science (acquired by Wheel/LBi)', dates: 'Jul 2001 to Jul 2004', place: 'Glasgow, Scotland',
+    title: 'Creative', org: 'It’s Not Rocket Science (acquired by Wheel/LBi)', dates: 'Jul 2001 to Jul 2004', place: 'Glasgow, Scotland', placeId: 'glasgow',
     points: ['Concept to delivery for the Home Office, Brylcreem and Scottish Power; secondment after the acquisition.'],
   },
   {
-    title: 'Flash Developer', org: 'Black ID', dates: 'Jul 2000 to Jun 2001', place: 'Glasgow, Scotland',
+    title: 'Flash Developer', org: 'Black ID', dates: 'Jul 2000 to Jun 2001', place: 'Glasgow, Scotland', placeId: 'glasgow',
     points: ['Led 4 developers; shipped rich media for MTV, Channel 4, Burger King, BT Cellnet and SQA.'],
   },
   {
-    title: 'Junior Designer', org: 'Imajica', dates: 'Jun 1998 to Jun 2000', place: 'Aberdeen, Scotland',
+    title: 'Junior Designer', org: 'Imajica', dates: 'Jun 1998 to Jun 2000', place: 'Aberdeen, Scotland', placeId: 'aberdeen',
     points: ['Studio all-rounder across design and early web for BP, Shell and Highland Distillers.'],
   },
 ];
@@ -81,7 +83,7 @@ const projects = [
 ];
 
 const education = [
-  { title: 'HND, Computer Graphic Design and Production (Class Representative)', org: 'North East Scotland College, Aberdeen', dates: 'Jun 1996 to Jun 1998' },
+  { title: 'HND, Computer Graphic Design and Production (Class Representative)', org: 'North East Scotland College, Aberdeen', dates: 'Jun 1996 to Jun 1998', place: 'Aberdeen, Scotland', placeId: 'aberdeen' },
 ];
 const certificates = [{ title: 'Leadership Training for Managers', org: 'Dale Carnegie Training' }];
 const achievements = [
@@ -105,9 +107,9 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
     <header class="cv-header grid">
       <a class="home" href="/">Rufus Spiller</a>
       <h1 class="cv-title">Curriculum<br />vitae</h1>
-      <LastUpdated date="2026-10-15" />
+      <LastUpdated date="2026-11-02" />
       <p class="headline">{headline}</p>
-      <p class="links">Glasgow, Scotland<br /><span class="print-only"><a href="https://rufusspiller.com">rufusspiller.com</a><br /></span><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
+      <p class="links"><span class="place"><ConceptIcon concept="place" id="glasgow" />Glasgow, Scotland</span><br /><span class="print-only"><a href="https://rufusspiller.com">rufusspiller.com</a><br /></span><a href="https://www.linkedin.com/in/rufusspiller">LinkedIn profile</a></p>
     </header>
 
     <main>
@@ -121,7 +123,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
         <ol class="content entries">
           {roles.map((role) => (
             <li class="entry">
-              <p class="meta">{role.dates}{role.place && <><br />{role.place}</>}</p>
+              <p class="meta">{role.dates}<br /><span class="place"><ConceptIcon concept="place" id={role.placeId} />{role.place}</span></p>
               <div class="detail">
                 <h3>{role.title}</h3>
                 <p class="org">{role.org}</p>
@@ -152,7 +154,7 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
         <div class="content entries">
           {education.map((e) => (
             <div class="entry">
-              <p class="meta">{e.dates}</p>
+              <p class="meta">{e.dates}<br /><span class="place"><ConceptIcon concept="place" id={e.placeId} />{e.place}</span></p>
               <div class="detail"><h3>{e.title}</h3><p class="org">{e.org}</p></div>
             </div>
           ))}
@@ -239,6 +241,9 @@ const skills = ['UX/UI design', 'Prototyping', 'User-centred design', 'Accessibi
   .entry:first-child { padding-top: 0; }
   .entry:last-child { border-bottom: none; } /* no rule under the last entry; the next section's top rule follows */
   .meta { font-size: 0.875rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  /* A place: its registry shape, then its name. The shape is decorative; the name carries the meaning. */
+  .place { display: inline-flex; align-items: flex-start; gap: 0.4em; margin-top: 0.2em; }
+  .place :global(.concept-icon) { margin-top: 0.1em; } /* lines up with the first line when the place wraps */
   .detail h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; }
   .org { font-weight: 500; }
   .detail ul { margin-top: 0.5rem; padding-left: 1.1em; max-width: 65ch; }

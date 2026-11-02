@@ -1,5 +1,5 @@
 {
- "about": "Icon system: each unit shape belongs to one concept site-wide. Exported from the Icon Registry. Places keep their shape on every page.",
+ "about": "Icon system: each unit shape belongs to one concept site-wide. Exported from the Icon Registry. Change a concept's shape number here to reassign it; every page follows (src/components/ConceptIcon.astro and the Jiu-Jitsu visualisation).",
  "shapes": {
   "4": "<g transform='translate(0.12 -2.25)'><path d=\"M122.33,77.42c-26.14,0-47.33-21.19-47.33-47.33,0,26.14-21.19,47.33-47.33,47.33,26.14,0,47.33,21.19,47.33,47.33,0-26.14,21.19-47.33,47.33-47.33Z\"/></g>",
   "2": "<rect x=\"29.12\" y=\"29.12\" width=\"91.76\" height=\"91.76\" rx=\"13.17\" ry=\"13.17\"/>",
