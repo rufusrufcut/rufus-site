@@ -4,6 +4,7 @@
 // and draws the unit shape assigned to it. To reassign a shape, change the concept's
 // "shape" number in the registry: every page that shows the concept changes with it,
 // including the Jiu-Jitsu visualisation, which reads the same file.
+// Every icon sits in a circle container, as in the Jiu-Jitsu visualisation.
 // Usage: <ConceptIcon concept="place" id="melbourne" />
 // The icon is decorative (aria-hidden), so always show the concept's name next to it.
 import registry from '../data/icon-registry.json';
@@ -22,21 +23,31 @@ const shape = registry.shapes[String(item.shape)];
 ---
 <svg
   class="concept-icon"
-  viewBox="25 25 100 100"
+  viewBox="0 0 150 150"
   aria-hidden="true"
   focusable="false"
   data-concept={concept}
   data-id={id}
-  set:html={shape}
-/>
+>
+  <g set:html={shape} />
+  <circle class="container" cx="75" cy="75" r="73" />
+</svg>
 
 <style>
-  /* Sized to the surrounding text and drawn in ink. The shapes sit in a 100 unit square,
-     so every concept keeps the same scale and only its form changes. */
+  /* Sized to the surrounding text and drawn in ink. Same geometry as the Jiu-Jitsu
+     visualisation: the shape inside a circle container (r 73 in a 150 box), so every
+     concept keeps the same scale and only its form changes. The circle's line stays
+     1px at any size (non-scaling stroke), so it doesn't vanish when the icon is small. */
   .concept-icon {
-    width: 1.2em;
-    height: 1.2em;
+    width: 1.5em;
+    height: 1.5em;
     flex: none;
     fill: var(--ink);
+  }
+  .container {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
   }
 </style>
