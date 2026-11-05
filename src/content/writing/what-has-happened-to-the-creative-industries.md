@@ -3,6 +3,7 @@
 title: What has happened to the Creative Industries?
 summary: Some thoughts about craft, AI tools, the next generation and the soul of our industry.
 published: 2026-11-02
+updated: 2026-11-05
 ---
 
 We used to be the lefty, socially conscious and touchy feely people in the room. We were all concepts and consideration. The feels over the finance. Telling corporations that they needed to understand the real world value of their tone of voice.
@@ -20,6 +21,12 @@ My buddy Rose and I were chatting about this and she reminded me that the Luddit
 This is not an AI essay. It’s some thoughts about the soul of our industry. I have often worried that we are not unionised, although I can’t really see what would happen if we all walked out... Less shelf wobblers? However without a union or a collective we can be an industry of insularity. Dreamers who are a bit too self absorbed.
 
 Back in the 2000’s I was involved in a whole bunch of initiatives that were trying to elevate the Scottish Design Industry. The point was to get a seat at the table if independence happened. We wanted to remind any incoming government that the creative industries brings significant money into the economy and it should be supported and invested in.
+
+<aside class="note" aria-label="The numbers">
+<p class="note-label">The numbers</p>
+<p>In 2023 Scotland’s creative industries generated £5.4 billion in gross value added from £10.2 billion of turnover, across more than 13,000 registered businesses. <a href="https://www.gov.scot/publications/independent-culture-fair-work-task-force-report-recommendations/pages/11/">Scottish Government</a></p>
+<p>Skills Development Scotland estimates £5.6 billion for 2025, 3.3% of Scotland’s economic output. Since 2015 the sector has grown 2.4% a year, against 0.9% for the economy as a whole. <a href="https://www.skillsdevelopmentscotland.co.uk/media/oqzlyrwj/sectoral-skills-assessment-creative-industries.pdf">Skills Development Scotland (PDF)</a></p>
+</aside>
 
 I was also involved in community get togethers and, maybe because I was younger, I was always up for any creative event where we could all hang out. I met so many likeminded people. People who became life long friends. I got job opportunities and generally had a great time.
 

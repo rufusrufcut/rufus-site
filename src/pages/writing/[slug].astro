@@ -76,6 +76,28 @@ const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', mo
   .prose :global(h2) { margin-top: 2em; font-size: 1.5em; line-height: 1.1; letter-spacing: -0.02em; }
   .prose :global(blockquote) { margin-block: 1.5em; padding-left: 1em; border-left: 3px solid var(--signal); }
 
+  /* Supporting notes (<aside class="note"> in the Markdown). Mobile first: always inline, straight after the paragraph they support. */
+  .prose :global(.note) {
+    margin-block: 1em 1.5em;
+    padding-top: 0.5em;
+    border-top: 1px solid var(--rule);
+    font-size: 0.8125em;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .prose :global(.note p + p) { margin-top: 0.5em; }
+  .prose :global(.note-label) { font-weight: 700; color: var(--signal); }
+  /* Wide screens: the note moves into the empty right-hand margin, like a sidenote in a book. */
+  @media (min-width: 1400px) {
+    .prose :global(.note) {
+      float: right;
+      clear: right;
+      width: 13rem;
+      margin: 0.25em -15rem 1em 0;
+      font-size: 0.875rem;
+    }
+  }
+
   .back { grid-column: 4 / span 7; padding-block: 2rem var(--margin); font-weight: 700; }
 
   @media (max-width: 760px) {
