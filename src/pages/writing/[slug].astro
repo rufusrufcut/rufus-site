@@ -44,6 +44,58 @@ const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', mo
   </body>
 </html>
 
+<script>
+  // Sidenotes in the margin, in the spirit of Gwern's sidenotes.js.
+  // On wide screens each note is placed level with its red number in the right-hand margin.
+  // If that spot is taken by the note above, it moves down just enough to clear it. If that would push it
+  // too far from its number, it uses the empty left-hand margin instead, whichever side lands it nearer.
+  // The text never moves. Below the breakpoint (or if this script doesn't run) notes stay inline after their paragraph.
+  const wide = window.matchMedia('(min-width: 1400px)');
+  const prose = document.querySelector('.prose');
+  const GAP = 16;   // px between stacked notes
+  const DRIFT = 48; // px a note may slip below its number before the left margin is tried
+
+  function layout() {
+    if (!prose) return;
+    const notes = [...prose.querySelectorAll(':scope > .note')];
+    prose.style.minHeight = '';
+    notes.forEach((n) => { n.style.top = ''; n.classList.remove('on-left'); });
+    if (!wide.matches || !notes.length) { prose.classList.remove('in-margin'); return; }
+
+    prose.classList.add('in-margin');
+    const proseTop = prose.getBoundingClientRect().top;
+    const floor = { right: 0, left: 0 }; // bottom edge of the notes placed so far, per margin
+    for (const note of notes) {
+      const ref = prose.querySelector(`.note-ref[data-note="${note.dataset.note}"]`);
+      const wanted = ref ? ref.getBoundingClientRect().top - proseTop - 4 : floor.right;
+      const right = Math.max(wanted, floor.right);
+      const left = Math.max(wanted, floor.left);
+      const side = right - wanted <= DRIFT || right <= left ? 'right' : 'left';
+      const top = side === 'right' ? right : left;
+      note.classList.toggle('on-left', side === 'left');
+      note.style.top = `${top}px`;
+      floor[side] = top + note.offsetHeight + GAP;
+    }
+    const lowest = Math.max(floor.right, floor.left);
+    // If the last note runs past the end of the text, make the article tall enough to hold it.
+    if (lowest > prose.offsetHeight) prose.style.minHeight = `${lowest}px`;
+  }
+
+  // Lay out now, when the window crosses the breakpoint, and whenever the text reflows (resizing, fonts loading).
+  layout();
+  wide.addEventListener('change', layout);
+  if (prose) new ResizeObserver(() => requestAnimationFrame(layout)).observe(prose);
+
+  // Hovering a number or its note marks the pair (the note's top rule turns red).
+  prose?.addEventListener('pointerover', (e) => toggle(e, true));
+  prose?.addEventListener('pointerout', (e) => toggle(e, false));
+  function toggle(e, on) {
+    const hit = e.target.closest('[data-note]');
+    if (!hit) return;
+    prose.querySelectorAll(`[data-note="${hit.dataset.note}"]`).forEach((el) => el.classList.toggle('is-active', on));
+  }
+</script>
+
 <style>
   /* Same 12-column grid as the other pages. The text column is capped at a comfortable reading measure (about 65 characters). */
   .grid {
@@ -76,9 +128,12 @@ const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', mo
   .prose :global(h2) { margin-top: 2em; font-size: 1.5em; line-height: 1.1; letter-spacing: -0.02em; }
   .prose :global(blockquote) { margin-block: 1.5em; padding-left: 1em; border-left: 3px solid var(--signal); }
 
-  /* Supporting notes (<aside class="note"> in the Markdown). Mobile first: always inline, straight after the paragraph they support. */
+  /* Sidenotes. Written as ordinary Markdown footnotes; src/plugins/sidenotes.mjs turns each one into
+     <aside class="note"> placed straight after the paragraph that refers to it, with a red number in the text.
+     Mobile first: the note is always inline, after its paragraph. */
+  .prose :global(:is(p, .note) + p) { margin-top: 1em; }
   .prose :global(.note) {
-    margin-block: 1em 1.5em;
+    margin-top: 0.75em;
     padding-top: 0.5em;
     border-top: 1px solid var(--rule);
     font-size: 0.8125em;
@@ -87,16 +142,25 @@ const readable = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', mo
   }
   .prose :global(.note p + p) { margin-top: 0.5em; }
   .prose :global(.note-label) { font-weight: 700; color: var(--signal); }
-  /* Wide screens: the note moves into the empty right-hand margin, like a sidenote in a book. */
-  @media (min-width: 1400px) {
-    .prose :global(.note) {
-      float: right;
-      clear: right;
-      width: 13rem;
-      margin: 0.25em -15rem 1em 0;
-      font-size: 0.875rem;
-    }
+  .prose :global(:is(.note-ref, .note-num)) { color: var(--signal); font-weight: 700; }
+  .prose :global(.note-ref) { font-size: 0.7em; margin-left: 0.15em; }
+
+  /* Wide screens: the script below adds .in-margin to the article and positions each note in the margin,
+     level with its red number. Without the script the notes simply stay inline, which still reads well. */
+  .prose.in-margin { position: relative; }
+  .prose.in-margin > :global(.note) {
+    position: absolute;
+    left: calc(100% + 2rem);
+    width: 13rem;
+    margin: 0;
+    font-size: 0.875rem;
   }
+  /* Overflow: when the right margin is crowded, a note goes in the empty left margin instead. */
+  .prose.in-margin > :global(.note.on-left) { left: auto; right: calc(100% + 2rem); }
+  /* Pairing: hovering a number or its note turns the note's top rule red and 2px.
+     The extra pixel is an inset shadow just under the 1px border, so nothing shifts. */
+  .prose :global(.note.is-active) { border-top-color: var(--signal); box-shadow: inset 0 1px 0 var(--signal); }
+  .prose :global(.note-ref) { padding-inline: 0.1em; cursor: default; }
 
   .back { grid-column: 4 / span 7; padding-block: 2rem var(--margin); font-weight: 700; }
 
