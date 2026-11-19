@@ -22,6 +22,7 @@ Change a value here and everything that uses the token follows. Check contrast a
 - Every concept (a place, a club) owns one unit shape, assigned in `src/data/icon-registry.json`. Melbourne is always shape 7, wherever it appears.
 - To reassign a shape, change the concept's `shape` number in the registry. Never pick a shape on a page.
 - Shapes sit in a circle container (r 73 in a 150 box), the same geometry as the Jiu-Jitsu visualisation.
+- Each kind of concept keeps its tier size from the layered icons: places fill the circle, clubs sit in the middle tier (0.58). Places and clubs reuse the same shape numbers (Aberdeen and Carlson Gracie are both shape 1), so the size is what tells them apart.
 
 ## Components (src/components/)
 
@@ -29,7 +30,8 @@ Change a value here and everything that uses the token follows. Check contrast a
 | --- | --- | --- |
 | `LastUpdated` | "Last updated" line with a date | On every page, directly under the page title. Update the date when the page changes. |
 | `ConceptIcon` | One concept's shape in its circle | Low-level: draws in ink unless the page sets `--concept-icon-colour`. Decorative (hidden from screen readers), so its name must sit beside it. Use `PlaceLabel` for places. |
-| `PlaceLabel` | A place's icon, in the highlight colour (or the data's colour, see below), followed by its name | **Wherever a place is shown as a label, use `PlaceLabel`.** |
+| `ConceptLabel` | Any registry concept's icon (a place, a club), in the highlight colour (or the data's colour, see below), followed by its name | **Wherever a concept is shown as a label, use `ConceptLabel`.** |
+| `PlaceLabel` | Shortcut for `ConceptLabel concept="place"` | Use for places. |
 
 ### Place labels
 
@@ -47,8 +49,10 @@ Usage:
 <PlaceLabel id="melbourne">Melbourne, Australia</PlaceLabel>   <!-- your own wording -->
 ```
 
-Pages that draw in the browser (like the Jiu-Jitsu visualisation) render a `<template>` per place with `PlaceLabel` at build time and copy it in, so the markup is identical everywhere.
+Club labels follow the same rule: `<ConceptLabel concept="club" id="mnbjj" />`.
 
-In a data visualisation where colour carries data, the place label's icon takes that colour instead of the highlight, by setting `--place-label-colour`. On the Jiu-Jitsu page it is the belt colour for that month, matching the month's icon in the grid. Any colour used this way must reach 3:1 on the paper.
+Pages that draw in the browser (like the Jiu-Jitsu visualisation) render a `<template>` per place and club with `ConceptLabel` at build time and copy it in, so the markup is identical everywhere.
 
-A place id that isn't in the registry stops the build, so a typo can't ship a label without its icon.
+In a data visualisation where colour carries data, a label's icon takes that colour instead of the highlight, by setting `--concept-label-colour` on a surrounding element. On the Jiu-Jitsu page the place and club labels take the belt colour for that month, matching the month's icon in the grid. Any colour used this way must reach 3:1 on the paper.
+
+An id that isn't in the registry stops the build, so a typo can't ship a label without its icon.

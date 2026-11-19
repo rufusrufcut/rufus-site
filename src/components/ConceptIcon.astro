@@ -5,6 +5,7 @@
 // "shape" number in the registry: every page that shows the concept changes with it,
 // including the Jiu-Jitsu visualisation, which reads the same file.
 // Every icon sits in a circle container, as in the Jiu-Jitsu visualisation.
+// Usage: <ConceptIcon concept="club" id="mnbjj" /> for a club.
 // Usage: <ConceptIcon concept="place" id="melbourne" />
 // The icon is decorative (aria-hidden), so always show the concept's name next to it.
 import registry from '../data/icon-registry.json';
@@ -20,6 +21,10 @@ if (!item || item.shape == null) {
   throw new Error(`ConceptIcon: no shape assigned to ${concept} "${id}" in icon-registry.json`);
 }
 const shape = registry.shapes[String(item.shape)];
+// Each kind of concept keeps the size it has in the layered icons: places fill the circle,
+// clubs sit in the middle tier (87 of 150, as in the Jiu-Jitsu grid). So a club never
+// reads as the place that owns the same shape number.
+const TIER = { place: '', club: 'translate(31.5 31.5) scale(0.58)' };
 ---
 <svg
   class="concept-icon"
@@ -29,7 +34,7 @@ const shape = registry.shapes[String(item.shape)];
   data-concept={concept}
   data-id={id}
 >
-  <g set:html={shape} />
+  <g transform={TIER[concept] || undefined} set:html={shape} />
   <circle class="container" cx="75" cy="75" r="73" />
 </svg>
 
