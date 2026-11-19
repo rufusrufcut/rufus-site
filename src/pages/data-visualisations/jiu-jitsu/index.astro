@@ -79,9 +79,10 @@ document.getElementById("defs").innerHTML = Object.entries(R.shapes).map(([k,v])
 function iconSvg(mo){
   const ink = BELT[mo.belt] || "#111111", pl = item("place",mo.place), cl = item("club",mo.club);
   let s = `<svg viewBox="0 0 150 150" aria-hidden="true" style="isolation:isolate">`;
-  /* overprint: place in a 40% tint of the belt colour, club in full colour printed over it */
+  /* overprint: place in a 40% tint of the belt colour, club in full colour printed over it at 0.76 of the circle,
+     large enough to read and small enough that the place still shows round it */
   if(pl) s += `<use href="#s${pl.shape}" fill="${ink}" opacity=".4"/>`;
-  if(cl) s += `<use href="#s${cl.shape}" x="31.5" y="31.5" width="87" height="87" fill="${ink}" style="mix-blend-mode:multiply"/>`;
+  if(cl) s += `<use href="#s${cl.shape}" x="18" y="18" width="114" height="114" fill="${ink}" style="mix-blend-mode:multiply"/>`;
   const n = mo.medals.length, r = 70;
   if(n===1) s += `<circle cx="75" cy="75" r="${r}" fill="none" stroke="${MEDAL[mo.medals[0]]}" stroke-width="10"/>`;
   else if(n>1){

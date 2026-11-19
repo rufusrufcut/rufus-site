@@ -22,7 +22,7 @@ Change a value here and everything that uses the token follows. Check contrast a
 - Every concept (a place, a club) owns one unit shape, assigned in `src/data/icon-registry.json`. Melbourne is always shape 7, wherever it appears.
 - To reassign a shape, change the concept's `shape` number in the registry. Never pick a shape on a page.
 - Shapes sit in a circle container (r 73 in a 150 box), the same geometry as the Jiu-Jitsu visualisation.
-- Every concept owns a shape number no other concept uses (places 1 to 7, 10 and 12; clubs 8, 9, 11 and 13), so a shape always means one thing and labels draw it at full size. Inside the layered Jiu-Jitsu icons a club sits in the middle tier (0.58), but that is the visualisation's composition, not the club's identity.
+- Every concept owns a shape number no other concept uses (places 1 to 7, 10 and 12; clubs 8, 9, 11 and 13), so a shape always means one thing and labels draw it at full size. Inside the layered Jiu-Jitsu icons a club is drawn at 0.76 of the circle over the place, but that is the visualisation's composition, not the club's identity.
 - A belt has no shape: its label shows a circle filled with the belt's colour, the same size as the shape icons.
 
 ## Components (src/components/)
