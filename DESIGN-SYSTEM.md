@@ -23,6 +23,7 @@ Change a value here and everything that uses the token follows. Check contrast a
 - To reassign a shape, change the concept's `shape` number in the registry. Never pick a shape on a page.
 - Shapes sit in a circle container (r 73 in a 150 box), the same geometry as the Jiu-Jitsu visualisation.
 - Every concept owns a shape number no other concept uses (places 1 to 7, 10 and 12; clubs 8, 9, 11 and 13), so a shape always means one thing and labels draw it at full size. Inside the layered Jiu-Jitsu icons a club is drawn at 0.76 of the circle over the place, but that is the visualisation's composition, not the club's identity.
+- Shapes have rounded corners: radius 4 in the 150 box (1.2 for the needle-tipped shapes 4 and 9, which a larger radius would blunt). Rounding is baked into the registry paths, so every use gets it. Medal ring segments and the dashed no-medal ring have round ends to match.
 - A belt has no shape: its label shows a circle filled with the belt's colour, the same size as the shape icons.
 
 ## Components (src/components/)

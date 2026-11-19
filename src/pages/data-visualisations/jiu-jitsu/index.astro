@@ -86,10 +86,10 @@ function iconSvg(mo){
   const n = mo.medals.length, r = 70;
   if(n===1) s += `<circle cx="75" cy="75" r="${r}" fill="none" stroke="${MEDAL[mo.medals[0]]}" stroke-width="10"/>`;
   else if(n>1){
-    const gap=6, p=a=>[75+r*Math.cos(a*Math.PI/180),75+r*Math.sin(a*Math.PI/180)];
+    const gap=14, p=a=>[75+r*Math.cos(a*Math.PI/180),75+r*Math.sin(a*Math.PI/180)];
     mo.medals.forEach((m,i)=>{ const a0=-90+i*360/n+gap/2, a1=-90+(i+1)*360/n-gap/2, [x0,y0]=p(a0), [x1,y1]=p(a1);
-      s += `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${MEDAL[m]}" stroke-width="10"/>`; });
-  } else if(mo.comps.length) s += `<circle cx="75" cy="75" r="72.5" fill="none" stroke="${NOMEDAL}" stroke-width="4" stroke-dasharray="7 7"/>`;
+      s += `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${a1-a0>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${MEDAL[m]}" stroke-width="10" stroke-linecap="round"/>`; });
+  } else if(mo.comps.length) s += `<circle cx="75" cy="75" r="72.5" fill="none" stroke="${NOMEDAL}" stroke-width="4" stroke-dasharray="3 11" stroke-linecap="round"/>`;
   else s += `<circle cx="75" cy="75" r="73" fill="none" stroke="${ink}" stroke-width="3"/>`;
   return s + `</svg>`;
 }
