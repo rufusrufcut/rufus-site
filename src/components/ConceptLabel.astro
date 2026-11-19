@@ -1,5 +1,6 @@
 ---
-// Concept label: a concept's registry shape followed by its name (a place, a club).
+// Concept label: a concept's registry shape followed by its name (a place, a club),
+// or for a belt, a circle in the belt's colour followed by its name.
 // Design system rule: wherever a concept from src/data/icon-registry.json is shown as a label
 // (not inside running text), use this component (or PlaceLabel for places). See DESIGN-SYSTEM.md.
 // The icon takes the highlight colour (--signal) unless the surrounding element sets
@@ -10,7 +11,7 @@ import ConceptIcon from './ConceptIcon.astro';
 import registry from '../data/icon-registry.json';
 
 interface Props {
-  concept: 'place' | 'club';
+  concept: 'place' | 'club' | 'belt';
   id: string;
 }
 const { concept, id } = Astro.props;

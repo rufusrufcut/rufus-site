@@ -5,26 +5,25 @@
 // "shape" number in the registry: every page that shows the concept changes with it,
 // including the Jiu-Jitsu visualisation, which reads the same file.
 // Every icon sits in a circle container, as in the Jiu-Jitsu visualisation.
-// Usage: <ConceptIcon concept="club" id="mnbjj" /> for a club.
+// Usage: <ConceptIcon concept="club" id="mnbjj" /> for a club; concept="belt" draws a circle in the belt's colour.
+// Places and clubs each own different shape numbers, so every shape draws at full size.
 // Usage: <ConceptIcon concept="place" id="melbourne" />
 // The icon is decorative (aria-hidden), so always show the concept's name next to it.
 import registry from '../data/icon-registry.json';
 
 interface Props {
-  concept: 'place' | 'club';
+  concept: 'place' | 'club' | 'belt';
   id: string;
 }
 const { concept, id } = Astro.props;
 const item = registry.dimensions[concept]?.items.find((i) => i.id === id);
+// A belt has no shape: it is shown as a circle filled with its colour.
+const isBelt = concept === 'belt';
 // Fail the build on a typo rather than ship a page with a missing icon.
-if (!item || item.shape == null) {
-  throw new Error(`ConceptIcon: no shape assigned to ${concept} "${id}" in icon-registry.json`);
+if (!item || (isBelt ? !item.colour : item.shape == null)) {
+  throw new Error(`ConceptIcon: nothing assigned to ${concept} "${id}" in icon-registry.json`);
 }
-const shape = registry.shapes[String(item.shape)];
-// Each kind of concept keeps the size it has in the layered icons: places fill the circle,
-// clubs sit in the middle tier (87 of 150, as in the Jiu-Jitsu grid). So a club never
-// reads as the place that owns the same shape number.
-const TIER = { place: '', club: 'translate(31.5 31.5) scale(0.58)' };
+const shape = isBelt ? '' : registry.shapes[String(item.shape)];
 ---
 <svg
   class="concept-icon"
@@ -34,8 +33,9 @@ const TIER = { place: '', club: 'translate(31.5 31.5) scale(0.58)' };
   data-concept={concept}
   data-id={id}
 >
-  <g transform={TIER[concept] || undefined} set:html={shape} />
-  <circle class="container" cx="75" cy="75" r="73" />
+  {isBelt
+    ? <circle class="swatch" cx="75" cy="75" r="73" fill={item.colour} />
+    : <><g set:html={shape} /><circle class="container" cx="75" cy="75" r="73" /></>}
 </svg>
 
 <style>
